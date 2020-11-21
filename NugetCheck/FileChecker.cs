@@ -10,9 +10,11 @@ namespace NugetCheck
     public class FileChecker
     {
         private List<PackageDetails> packages;
-        public FileChecker()
+        private readonly NugetService _nugetService;
+        public FileChecker(NugetService nugetService)
         {
             packages = new List<PackageDetails>();
+            _nugetService = nugetService;
         }
 
         public async Task Execute(string filePath)
@@ -63,6 +65,9 @@ namespace NugetCheck
                     foreach(var p in packages)
                     {
                         Console.WriteLine(p.ToString());
+
+                        var nugetQueryResponse = await _nugetService.queryPackageByName(p.Name);
+                        Console.WriteLine(nugetQueryResponse);
                     }
                 }
 

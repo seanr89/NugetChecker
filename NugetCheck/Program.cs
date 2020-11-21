@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-
 namespace NugetCheck
 {
     class Program
@@ -98,6 +97,10 @@ namespace NugetCheck
                                                 LogLevel.Warning);
 
             services.AddSingleton<FileChecker>();
+
+            services.AddTransient<NugetService>();
+
+            services.AddHttpClient<NugetService>();
         }
 
         /// <summary>
