@@ -5,15 +5,17 @@ namespace NugetCheck
         public string Name { get; set; }
         public string Version { get; set; }
 
+        public string LatestNugetVersion { get; set; }
+
         public PackageDetails()
         {
-            
+
         }
 
         public void UpdatePackageDetails(string name, string version)
         {
             Name = name;
-            Version = version;        
+            Version = version;
         }
 
         public override string ToString()
