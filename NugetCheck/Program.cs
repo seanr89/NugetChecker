@@ -26,6 +26,11 @@ namespace NugetCheck
             // Console.WriteLine("Input how many days to calculate back, and then press Enter (1, 2, 3, etc...)");
             // int days = Convert.ToInt32(Console.ReadLine());
 
+            string filePath = @"C:\Users\craft\Documents\Programming\GIT\NugetChecker\NugetCheck\NugetCheck.csproj";
+            
+            string inputFilePath = args[1];
+            //Console.WriteLine($"fileName: {fileName}");
+
             try
             {
                 //Asynchronous method executed with Wait added to ensure that console request is not output too early
