@@ -28,13 +28,24 @@ namespace NugetCheck
 
             string filePath = @"C:\Users\craft\Documents\Programming\GIT\NugetChecker\NugetCheck\NugetCheck.csproj";
             
-            string inputFilePath = args[1];
-            //Console.WriteLine($"fileName: {fileName}");
+            try{
+                string inputFilePath = args[1];
+                if(string.IsNullOrEmpty(inputFilePath) == false)
+                    filePath = inputFilePath;
+                //Console.WriteLine($"fileName: {fileName}");
+            }
+            catch
+            {
+                //we just want to skip past the error if no input
+                //Console.WriteLine($"File argument exception");
+            }
+
+            Console.WriteLine($"fileName: {filePath}");
 
             try
             {
                 //Asynchronous method executed with Wait added to ensure that console request is not output too early
-                serviceProvider.GetService<FileChecker>().Execute().Wait();
+                serviceProvider.GetService<FileChecker>().Execute(filePath).Wait();
             }
             catch (NotImplementedException e)
             {
@@ -78,7 +89,7 @@ namespace NugetCheck
         /// <param name="config"></param>
         private static void RegisterAndInjectServices(IServiceCollection services, IConfiguration config)
         {
-            Console.WriteLine("RegisterAndInjectServices");
+            //Console.WriteLine("RegisterAndInjectServices");
 
             services.AddLogging(logging =>
             {
