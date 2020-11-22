@@ -51,7 +51,7 @@ namespace NugetCheck
                 var latestPackage = package.Response.data[0];
                 if (package.Version != latestPackage.Version)
                 {
-                    //package is not on latest!
+                    //package is not on latest version
                     Console.WriteLine($"Package: {package.Name} can be updated to version : {latestPackage.Version}");
                 }
                 // else
