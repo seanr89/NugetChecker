@@ -54,8 +54,16 @@ namespace NugetCheck
                     {
                         //Console.WriteLine(p.ToString());
                         var nugetQueryResponse = await _nugetService.queryPackageByName(p.Name);
-                        Console.WriteLine(nugetQueryResponse);
+                        if(nugetQueryResponse != null)
+                        {  
+                            Console.WriteLine("got something!");
+                            p.Response = nugetQueryResponse;
+                        }
                     }
+
+                    //Ok now we need to write a checker
+                    PackageChecker checker = new PackageChecker();
+                    checker.CheckEachPackage(packages);
                 }
 
             }

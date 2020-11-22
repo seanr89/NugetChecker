@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace NugetCheck
 {
@@ -17,12 +18,21 @@ namespace NugetCheck
             _httpClient = httpClient;
         }
 
-        public async Task<string> queryPackageByName(string packageName){
+        // public async Task<string> queryPackageByName(string packageName){
+
+        //     var url = _ServiceIndex+packageName;
+        //     Console.WriteLine("queryPackageByName url: " + url);
+        //     var response = await _httpClient.GetStringAsync(_ServiceIndex+packageName);
+        //     return response;
+        // }
+
+        public async Task<NugetResponse> queryPackageByName(string packageName){
 
             var url = _ServiceIndex+packageName;
-            Console.WriteLine("queryPackageByName: " + url);
+            Console.WriteLine("queryPackageByName url: " + url);
             var response = await _httpClient.GetStringAsync(_ServiceIndex+packageName);
-            return response;
+            var jsonObject = JsonConvert.DeserializeObject<NugetResponse>(response);
+            return jsonObject;
         }
     }
 }

@@ -5,7 +5,7 @@ namespace NugetCheck
         public string Name { get; set; }
         public string Version { get; set; }
 
-        public string LatestNugetVersion { get; set; }
+        public NugetResponse Response { get; set; }
 
         public PackageDetails()
         {
