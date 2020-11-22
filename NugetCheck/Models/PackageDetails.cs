@@ -2,6 +2,7 @@ namespace NugetCheck
 {
     public class PackageDetails
     {
+        public string ProjectPath { get; set; }
         public string Name { get; set; }
         public string Version { get; set; }
 
@@ -12,8 +13,9 @@ namespace NugetCheck
 
         }
 
-        public void UpdatePackageDetails(string name, string version)
+        public void UpdatePackageDetails(string projectPath, string name, string version)
         {
+            ProjectPath = projectPath;
             Name = name;
             Version = version;
         }

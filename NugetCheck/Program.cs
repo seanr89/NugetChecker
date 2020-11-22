@@ -1,8 +1,11 @@
 ﻿using System;
+using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
+
 namespace NugetCheck
 {
     class Program
@@ -22,12 +25,12 @@ namespace NugetCheck
             //Initialise netcore dependency injection provider
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
-            string filePath = @"C:\Users\craft\Documents\Programming\GIT\NugetChecker\NugetCheck\NugetCheck.csproj";
+            string folderPath = @"C:\Users\craft\Documents\Programming\GIT\NugetChecker";
             
             try{
                 string inputFilePath = args[1];
                 if(string.IsNullOrEmpty(inputFilePath) == false)
-                    filePath = inputFilePath;
+                    folderPath = inputFilePath;
             }
             catch
             {
@@ -35,12 +38,22 @@ namespace NugetCheck
                 //Console.WriteLine($"File argument exception");
             }
 
-            Console.WriteLine($"File to search: {filePath}");
+            string[] files = Directory.GetFiles(folderPath, "*.csproj", SearchOption.AllDirectories);
+
+            if(files.Any())
+            {
+                foreach(string file in files)
+                {
+                    Console.WriteLine($"found file: {file}");
+                }
+            }
+
+            Console.WriteLine($"Folder to search: {folderPath}");
 
             try
             {
                 //Asynchronous method executed with Wait added to ensure that console request is not output too early
-                serviceProvider.GetService<FileChecker>().Execute(filePath).Wait();
+                serviceProvider.GetService<FileChecker>().Execute(files).Wait();
             }
             catch (NotImplementedException e)
             {

@@ -16,4 +16,7 @@ App to run through all csproj files in a folder, find all applicable package ref
     - Complete
 
 ## TODO
-X. Add folder search for all .csproj files!
+1. Add folder search for all .csproj files!
+    - Created a 2nd test app to check for files in a specific folder!
+    - Done
+2. Move process to checker piece and support looping!

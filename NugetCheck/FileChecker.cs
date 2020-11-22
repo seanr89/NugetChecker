@@ -17,56 +17,60 @@ namespace NugetCheck
             _nugetService = nugetService;
         }
 
-        public async Task Execute(string filePath)
+        public async Task Execute(string[] filePaths)
         {
             Console.WriteLine("FileChecker: Execute");
 
-            string[] lines = await File.ReadAllLinesAsync(filePath);
-
-            if (lines.Any())
+            foreach(string filePath in filePaths)
             {
-                foreach (string reference in lines)
+                string[] lines = await File.ReadAllLinesAsync(filePath);
+
+                if (lines.Any())
                 {
-                    if (reference.Contains("TargetFramework"))
+                    foreach (string reference in lines)
                     {
-                        String result = checkAndProcessTargetFramework(reference);
-                        Console.WriteLine($"TargetFramework : {result}");
-                    }
+                        if (reference.Contains("TargetFramework"))
+                        {
+                            String result = checkAndProcessTargetFramework(reference);
+                            Console.WriteLine($"TargetFramework : {result}");
+                        }
 
-                    if (reference.Contains("PackageReference"))
-                    {
-                        var package = new PackageDetails();
-                        //Package name - to be tidied up!
-                        string packageName = tryGetPackageName(reference);
-                        //Version - to be tidied up
-                        string packageVersion = tryGetPackageVersion(reference);
+                        if (reference.Contains("PackageReference"))
+                        {
+                            var package = new PackageDetails();
+                            //Package name - to be tidied up!
+                            string packageName = tryGetPackageName(reference);
+                            //Version - to be tidied up
+                            string packageVersion = tryGetPackageVersion(reference);
 
-                        package.UpdatePackageDetails(packageName, packageVersion);
-                        packages.Add(package);
-                    }
-                }
-
-                if (packages.Any())
-                {
-                    foreach (var p in packages)
-                    {
-                        var nugetQueryResponse = await _nugetService.queryPackageByName(p.Name);
-                        if(nugetQueryResponse != null)
-                        {  
-                            p.Response = nugetQueryResponse;
+                            package.UpdatePackageDetails(filePath, packageName, packageVersion);
+                            packages.Add(package);
                         }
                     }
 
-                    //Ok now we need to write a checker
-                    PackageChecker checker = new PackageChecker();
-                    checker.CheckEachPackage(packages);
-                }
+                    if (packages.Any())
+                    {
+                        foreach (var p in packages)
+                        {
+                            var nugetQueryResponse = await _nugetService.queryPackageByName(p.Name);
+                            if(nugetQueryResponse != null)
+                            {  
+                                p.Response = nugetQueryResponse;
+                            }
+                        }
 
+                        //Ok now we need to write a checker
+                        PackageChecker checker = new PackageChecker();
+                        checker.CheckEachPackage(packages);
+                    }
+
+                }
+                else
+                {
+                    Console.WriteLine("No file content found!");
+                }
             }
-            else
-            {
-                Console.WriteLine("No file content found!");
-            }
+
         }
 
         /// <summary>
