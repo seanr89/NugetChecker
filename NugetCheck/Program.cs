@@ -25,11 +25,15 @@ namespace NugetCheck
             //Initialise netcore dependency injection provider
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
-            string folderPath = @"C:\Users\craft\Documents\Programming\GIT\NugetChecker";
-            
-            try{
+            //windows path
+            //string folderPath = @"C:\Users\craft\Documents\Programming\GIT\NugetChecker";
+            //mac path
+            string folderPath = @"/Users/seanrafferty/Documents/Projects/NugetChecker";
+
+            try
+            {
                 string inputFilePath = args[1];
-                if(string.IsNullOrEmpty(inputFilePath) == false)
+                if (string.IsNullOrEmpty(inputFilePath) == false)
                     folderPath = inputFilePath;
             }
             catch
@@ -40,9 +44,9 @@ namespace NugetCheck
 
             string[] files = Directory.GetFiles(folderPath, "*.csproj", SearchOption.AllDirectories);
 
-            if(files.Any())
+            if (files.Any())
             {
-                foreach(string file in files)
+                foreach (string file in files)
                 {
                     Console.WriteLine($"found file: {file}");
                 }

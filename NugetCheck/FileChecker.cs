@@ -22,13 +22,15 @@ namespace NugetCheck
             Console.WriteLine("FileChecker: Execute");
             List<ProjectPackages> projects = new List<ProjectPackages>();
 
-            foreach(string filePath in filePaths)
+            foreach (string filePath in filePaths)
             {
                 //new logic for multiple project details handled!
                 var projectDetails = new ProjectPackages();
                 projectDetails.Path = filePath;
-                var filePathSlashIndex = filePath.LastIndexOf("\\");
-                projectDetails.Name = filePath.Substring(filePathSlashIndex);
+                //var filePathSlashIndex = filePath.LastIndexOf("\\");
+                //mac/linux
+                var filePathSlashIndex = filePath.LastIndexOf("/");
+                projectDetails.Name = filePath.Substring(filePathSlashIndex).Replace(".csproj", "").Trim();
                 projects.Add(projectDetails);
 
                 string[] lines = await File.ReadAllLinesAsync(filePath);
@@ -61,8 +63,8 @@ namespace NugetCheck
                         foreach (var p in packages)
                         {
                             var nugetQueryResponse = await _nugetService.queryPackageByName(p.Name);
-                            if(nugetQueryResponse != null)
-                            {  
+                            if (nugetQueryResponse != null)
+                            {
                                 p.Response = nugetQueryResponse;
                             }
                         }
