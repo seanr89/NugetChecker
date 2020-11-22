@@ -36,8 +36,6 @@ namespace NugetCheck
                     if (reference.Contains("PackageReference"))
                     {
                         var package = new PackageDetails();
-                        //Console.WriteLine(reference);
-
                         //Package name - to be tidied up!
                         string packageName = tryGetPackageName(reference);
                         //Version - to be tidied up
@@ -52,11 +50,9 @@ namespace NugetCheck
                 {
                     foreach (var p in packages)
                     {
-                        //Console.WriteLine(p.ToString());
                         var nugetQueryResponse = await _nugetService.queryPackageByName(p.Name);
                         if(nugetQueryResponse != null)
                         {  
-                            Console.WriteLine("got something!");
                             p.Response = nugetQueryResponse;
                         }
                     }
@@ -73,6 +69,11 @@ namespace NugetCheck
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
         private string checkAndProcessTargetFramework(string line)
         {
             string frameWork = "Unknown";
@@ -86,6 +87,11 @@ namespace NugetCheck
             return frameWork;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
         private string tryGetPackageName(string line)
         {
             int packageIndex = line.IndexOf("Include=") + "Include=".Length;
@@ -98,6 +104,11 @@ namespace NugetCheck
             return packageName;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
         private string tryGetPackageVersion(string line)
         {
             //Version - to be tidied up

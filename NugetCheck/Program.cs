@@ -22,16 +22,12 @@ namespace NugetCheck
             //Initialise netcore dependency injection provider
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
-            // Console.WriteLine("Input how many days to calculate back, and then press Enter (1, 2, 3, etc...)");
-            // int days = Convert.ToInt32(Console.ReadLine());
-
             string filePath = @"C:\Users\craft\Documents\Programming\GIT\NugetChecker\NugetCheck\NugetCheck.csproj";
             
             try{
                 string inputFilePath = args[1];
                 if(string.IsNullOrEmpty(inputFilePath) == false)
                     filePath = inputFilePath;
-                //Console.WriteLine($"fileName: {fileName}");
             }
             catch
             {
@@ -39,7 +35,7 @@ namespace NugetCheck
                 //Console.WriteLine($"File argument exception");
             }
 
-            Console.WriteLine($"fileName: {filePath}");
+            Console.WriteLine($"File to search: {filePath}");
 
             try
             {
@@ -64,7 +60,6 @@ namespace NugetCheck
         /// <returns></returns>
         private static IConfigurationRoot LoadAppSettings()
         {
-            //Console.WriteLine("LoadAppSettings");
             try
             {
                 var config = new ConfigurationBuilder()
@@ -88,8 +83,6 @@ namespace NugetCheck
         /// <param name="config"></param>
         private static void RegisterAndInjectServices(IServiceCollection services, IConfiguration config)
         {
-            //Console.WriteLine("RegisterAndInjectServices");
-
             services.AddLogging(logging =>
             {
                 logging.AddConsole();

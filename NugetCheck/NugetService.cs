@@ -12,24 +12,16 @@ namespace NugetCheck
     {
         private readonly HttpClient _httpClient;
         private const string _ServiceIndex = "https://azuresearch-usnc.nuget.org/query?q=packageid:";
-        //private const string _ServiceIndex = "https://www.nuget.org/packages/";
+        
         public NugetService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
-        // public async Task<string> queryPackageByName(string packageName){
-
-        //     var url = _ServiceIndex+packageName;
-        //     Console.WriteLine("queryPackageByName url: " + url);
-        //     var response = await _httpClient.GetStringAsync(_ServiceIndex+packageName);
-        //     return response;
-        // }
-
         public async Task<NugetResponse> queryPackageByName(string packageName){
 
             var url = _ServiceIndex+packageName;
-            Console.WriteLine("queryPackageByName url: " + url);
+            //Console.WriteLine("queryPackageByName url: " + url);
             var response = await _httpClient.GetStringAsync(_ServiceIndex+packageName);
             var jsonObject = JsonConvert.DeserializeObject<NugetResponse>(response);
             return jsonObject;
