@@ -59,6 +59,7 @@ namespace NugetCheck
                             packages.Add(package);
                         }
                     }
+                    projectDetails.Packages = packages;
 
                     if (packages.Any())
                     {
