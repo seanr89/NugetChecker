@@ -20,9 +20,17 @@ namespace NugetCheck
         public async Task Execute(string[] filePaths)
         {
             Console.WriteLine("FileChecker: Execute");
+            List<ProjectPackages> projects = new List<ProjectPackages>();
 
             foreach(string filePath in filePaths)
             {
+                //new logic for multiple project details handled!
+                var projectDetails = new ProjectPackages();
+                projectDetails.Path = filePath;
+                var filePathSlashIndex = filePath.LastIndexOf("\\");
+                projectDetails.Name = filePath.Substring(filePathSlashIndex);
+                projects.Add(projectDetails);
+
                 string[] lines = await File.ReadAllLinesAsync(filePath);
 
                 if (lines.Any())
