@@ -6,6 +6,7 @@ namespace NugetCheck
     {
         public string Path { get; set; }
         public string Name { get; set; }
+        public string Framework { get; set; }
         public List<PackageDetails> Packages { get; set; } = new List<PackageDetails>();
     }
 }

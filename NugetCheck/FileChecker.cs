@@ -39,10 +39,12 @@ namespace NugetCheck
                 {
                     foreach (string reference in lines)
                     {
+                        //Support checks for target framework
                         if (reference.Contains("TargetFramework"))
                         {
                             String result = checkAndProcessTargetFramework(reference);
-                            Console.WriteLine($"TargetFramework : {result}");
+                            projectDetails.Framework = result;
+                            //Console.WriteLine($"TargetFramework : {result}");
                         }
 
                         if (reference.Contains("PackageReference"))
@@ -69,9 +71,9 @@ namespace NugetCheck
                             }
                         }
 
-                        //Ok now we need to write a checker
-                        PackageChecker checker = new PackageChecker();
-                        checker.CheckEachPackage(packages);
+                        // //Ok now we need to write a checker
+                        // PackageChecker checker = new PackageChecker();
+                        // checker.CheckEachPackage(packages);
                     }
 
                 }
@@ -79,6 +81,13 @@ namespace NugetCheck
                 {
                     Console.WriteLine("No file content found!");
                 }
+            }
+
+            PackageChecker checker = new PackageChecker();
+            foreach (var proj in projects)
+            {
+                //Ok now we need to write a checker
+                checker.CheckPackagesForProject(proj);
             }
 
         }
