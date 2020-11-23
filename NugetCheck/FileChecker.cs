@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Build.Evaluation;
+using System.Runtime.InteropServices;
 
 namespace NugetCheck
 {
@@ -27,9 +28,18 @@ namespace NugetCheck
                 //new logic for multiple project details handled!
                 var projectDetails = new ProjectPackages();
                 projectDetails.Path = filePath;
-                //var filePathSlashIndex = filePath.LastIndexOf("\\");
-                //mac/linux
-                var filePathSlashIndex = filePath.LastIndexOf("/");
+                int filePathSlashIndex = 0;
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    // Do something
+                    filePathSlashIndex = filePath.LastIndexOf("\\");
+                }
+                else
+                {
+                    //mac OR linux
+                    filePathSlashIndex = filePath.LastIndexOf("/");
+                }
+               
                 projectDetails.Name = filePath.Substring(filePathSlashIndex).Replace(".csproj", "").Trim();
                 projects.Add(projectDetails);
 
@@ -47,7 +57,7 @@ namespace NugetCheck
                             //Console.WriteLine($"TargetFramework : {result}");
                         }
 
-                        if (reference.Contains("PackageReference"))
+                        if (reference.TrimStart().StartsWith("<PackageReference"))
                         {
                             var package = new PackageDetails();
                             //Package name - to be tidied up!
@@ -100,6 +110,7 @@ namespace NugetCheck
         /// <returns></returns>
         private string checkAndProcessTargetFramework(string line)
         {
+            //Console.WriteLine("checkAndProcessTargetFramework");
             string frameWork = "Unknown";
 
             int pFrom = line.IndexOf(">") + ">".Length;
@@ -118,6 +129,7 @@ namespace NugetCheck
         /// <returns></returns>
         private string tryGetPackageName(string line)
         {
+            //Console.WriteLine($"tryGetPackageName : {line}");
             int packageIndex = line.IndexOf("Include=") + "Include=".Length;
 
             string packageName = line.Substring(packageIndex);
@@ -135,6 +147,7 @@ namespace NugetCheck
         /// <returns></returns>
         private string tryGetPackageVersion(string line)
         {
+            //Console.WriteLine("tryGetPackageVersion");
             //Version - to be tidied up
             int versionIndex = line.IndexOf("Version=") + "Version=".Length;
 

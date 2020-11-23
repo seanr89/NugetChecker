@@ -1,6 +1,11 @@
 # NugetChecker
 App to run through all csproj files in a folder, find all applicable package references and then contact to the NUGET api to see if there is a more up to date version!
 
+## Run App - Debug
+Run cmd `dotnet run .\bin\Debug\net5.0\NugetCheck.dll "C:\Users\seanr\Source\Workspaces\COVID_RH"`
+
+i.e. `dotnet run .\bin\Debug\net5.0\NugetCheck.dll <Add File Path Here>`
+
 ## Plan
 1. Step 1 is to create a test .Net5 console app
     - Complete
@@ -19,4 +24,8 @@ App to run through all csproj files in a folder, find all applicable package ref
 1. Add folder search for all .csproj files!
     - Created a 2nd test app to check for files in a specific folder!
     - Done
-2. Move process to checker piece and support looping!
+2. Move process to checker piece and support looping across multiple projects
+    - Done
+3. Updated comments and comments!
+    - Done
+X. 

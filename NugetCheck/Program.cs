@@ -26,9 +26,9 @@ namespace NugetCheck
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             //windows path
-            //string folderPath = @"C:\Users\craft\Documents\Programming\GIT\NugetChecker";
+            string folderPath = @"C:\Users\seanr\Source\Workspaces\COVID_RH\src\Services\KitRegistration";
             //mac path
-            string folderPath = @"/Users/seanrafferty/Documents/Projects/NugetChecker";
+            //string folderPath = @"/Users/seanrafferty/Documents/Projects/NugetChecker";
 
             try
             {
@@ -42,6 +42,7 @@ namespace NugetCheck
                 //Console.WriteLine($"File argument exception");
             }
 
+            Console.WriteLine($"Folder to search: {folderPath} - Searching");
             string[] files = Directory.GetFiles(folderPath, "*.csproj", SearchOption.AllDirectories);
 
             if (files.Any())
@@ -51,8 +52,6 @@ namespace NugetCheck
                     Console.WriteLine($"found file: {file}");
                 }
             }
-
-            Console.WriteLine($"Folder to search: {folderPath}");
 
             try
             {
