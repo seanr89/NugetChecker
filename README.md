@@ -31,3 +31,6 @@ i.e. `dotnet run .\bin\Debug\net5.0\NugetCheck.dll <Add File Path Here>`
 
 X. Update nuget package on request / approval!
 X. Report / CSV output!
+
+## Build and Publish
+run cmd `dotnet publish -r win-x64 -c Release /p:PublishSingleFile=true /p:PublishTrimmed=true`
