@@ -28,4 +28,6 @@ i.e. `dotnet run .\bin\Debug\net5.0\NugetCheck.dll <Add File Path Here>`
     - Done
 3. Updated comments and comments!
     - Done
-X. 
+
+X. Update nuget package on request / approval!
+X. Report / CSV output!
