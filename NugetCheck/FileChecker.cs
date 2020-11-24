@@ -23,28 +23,15 @@ namespace NugetCheck
             Console.WriteLine("FileChecker: Execute");
             List<ProjectPackages> projects = new List<ProjectPackages>();
 
+            //Loop through each provided file path of a .csproj file
             foreach (string filePath in filePaths)
             {
-                //new logic for multiple project details handled!
-                var projectDetails = new ProjectPackages();
-                projectDetails.Path = filePath;
-                int filePathSlashIndex = 0;
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    //Windows : added -1 to remove the last \
-                    filePathSlashIndex = filePath.LastIndexOf("\\") - 1;
-                }
-                else
-                {
-                    //mac OR linux
-                    filePathSlashIndex = filePath.LastIndexOf("/") - 1;
-                }
-               
-                projectDetails.Name = filePath.Substring(filePathSlashIndex).Replace(".csproj", "").Trim();
+                //support initialisation of model to maintain details for a single project!
+                var projectDetails = initialiseProjectPackage(filePath);
                 projects.Add(projectDetails);
 
+                //Now split the file up into its individual lines
                 string[] lines = await File.ReadAllLinesAsync(filePath);
-
                 if (lines.Any())
                 {
                     foreach (string reference in lines)
@@ -81,10 +68,6 @@ namespace NugetCheck
                                 p.Response = nugetQueryResponse;
                             }
                         }
-
-                        // //Ok now we need to write a checker
-                        // PackageChecker checker = new PackageChecker();
-                        // checker.CheckEachPackage(packages);
                     }
 
                 }
@@ -94,13 +77,34 @@ namespace NugetCheck
                 }
             }
 
-            PackageChecker checker = new PackageChecker();
+            PackageComparer comparer = new PackageComparer();
             foreach (var proj in projects)
             {
                 //Ok now we need to write a checker
-                checker.CheckPackagesForProject(proj);
+                comparer.tryComparePackagesForProjectAndLogIfOutOfDate(proj);
             }
 
+        }
+
+        private ProjectPackages initialiseProjectPackage(string filePath)
+        {
+            var result = new ProjectPackages();
+            result.Path = filePath;
+            int filePathSlashIndex = 0;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                // Do something
+                filePathSlashIndex = filePath.LastIndexOf("\\");
+            }
+            else
+            {
+                //mac OR linux
+                filePathSlashIndex = filePath.LastIndexOf("/");
+            }
+
+            result.Name = filePath.Substring(filePathSlashIndex).Replace(".csproj", "").Trim();
+
+            return result;
         }
 
         /// <summary>

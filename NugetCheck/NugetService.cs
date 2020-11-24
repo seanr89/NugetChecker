@@ -19,12 +19,15 @@ namespace NugetCheck
             _httpClient = httpClient;
         }
 
+        /// <summary>
+        /// Support the query events to the nuget service
+        /// </summary>
+        /// <param name="packageName">the name of the package to search for</param>
+        /// <returns></returns>
         public async Task<NugetResponse> queryPackageByName(string packageName)
         {
-
+            //TODO: add in some http exception handling
             var url = _ServiceIndex + packageName;
-            //Console.WriteLine("queryPackageByName url: " + url);
-            //var response = await _httpClient.GetStringAsync(_ServiceIndex+packageName);
             HttpResponseMessage response = await _httpClient.GetAsync(_ServiceIndex + packageName);
             if (!response.IsSuccessStatusCode)
             {
