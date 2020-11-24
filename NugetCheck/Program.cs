@@ -15,7 +15,7 @@ namespace NugetCheck
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Nuget Checker\r");
+            Console.WriteLine("Nuget Version Checker\r");
             Console.WriteLine("------------------------\n");
 
             Configuration = LoadAppSettings();
@@ -26,7 +26,8 @@ namespace NugetCheck
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             //windows path
-            string folderPath = @"C:\Users\seanr\Source\Workspaces\COVID_RH\src\Services\KitRegistration";
+            //string folderPath = @"C:\Users\seanr\Source\Workspaces\COVID_RH\src\Services\KitRegistration";
+            string folderPath = @"C:\Users\seanr\Source\Repos\PersonalApps\NugetChecker";
             //mac path
             //string folderPath = @"/Users/seanrafferty/Documents/Projects/NugetChecker";
 

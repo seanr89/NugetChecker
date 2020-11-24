@@ -31,13 +31,13 @@ namespace NugetCheck
                 int filePathSlashIndex = 0;
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    // Do something
-                    filePathSlashIndex = filePath.LastIndexOf("\\");
+                    //Windows : added -1 to remove the last \
+                    filePathSlashIndex = filePath.LastIndexOf("\\") - 1;
                 }
                 else
                 {
                     //mac OR linux
-                    filePathSlashIndex = filePath.LastIndexOf("/");
+                    filePathSlashIndex = filePath.LastIndexOf("/") - 1;
                 }
                
                 projectDetails.Name = filePath.Substring(filePathSlashIndex).Replace(".csproj", "").Trim();
