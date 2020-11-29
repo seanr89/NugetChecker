@@ -21,6 +21,9 @@ namespace NugetCheck
         public async Task Execute(string[] filePaths)
         {
             Console.WriteLine("FileChecker: Execute");
+            if (!filePaths.Any())
+                return;
+
             List<ProjectPackages> projects = new List<ProjectPackages>();
 
             //Loop through each provided file path of a .csproj file
@@ -83,9 +86,13 @@ namespace NugetCheck
                 //Ok now we need to write a checker
                 comparer.tryComparePackagesForProjectAndLogIfOutOfDate(proj);
             }
-
         }
 
+        /// <summary>
+        /// Initialise and create a new project package model
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         private ProjectPackages initialiseProjectPackage(string filePath)
         {
             var result = new ProjectPackages();
@@ -108,7 +115,7 @@ namespace NugetCheck
         }
 
         /// <summary>
-        /// 
+        /// Query the content of a project framework version
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
@@ -127,10 +134,10 @@ namespace NugetCheck
         }
 
         /// <summary>
-        /// 
+        /// check the provided line for the included name
         /// </summary>
-        /// <param name="line"></param>
-        /// <returns></returns>
+        /// <param name="line">file line</param>
+        /// <returns>the package name</returns>
         private string tryGetPackageName(string line)
         {
             //Console.WriteLine($"tryGetPackageName : {line}");
@@ -145,14 +152,13 @@ namespace NugetCheck
         }
 
         /// <summary>
-        /// 
+        /// check the provided line for the included package name version
         /// </summary>
-        /// <param name="line"></param>
-        /// <returns></returns>
+        /// <param name="line">file line</param>
+        /// <returns>string formatted version number</returns>
         private string tryGetPackageVersion(string line)
         {
             //Console.WriteLine("tryGetPackageVersion");
-            //Version - to be tidied up
             int versionIndex = line.IndexOf("Version=") + "Version=".Length;
 
             string packageVersion = line.Substring(versionIndex);

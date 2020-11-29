@@ -37,22 +37,17 @@ namespace NugetCheck
                 if (string.IsNullOrEmpty(inputFilePath) == false)
                     folderPath = inputFilePath;
             }
-            catch
-            {
-                //we just want to skip past the error if no input
-                //Console.WriteLine($"File argument exception");
-            }
-
+            catch { }
             Console.WriteLine($"Folder to search: {folderPath} - Searching");
             string[] files = Directory.GetFiles(folderPath, "*.csproj", SearchOption.AllDirectories);
 
-            if (files.Any())
-            {
-                foreach (string file in files)
-                {
-                    Console.WriteLine($"found file: {file}");
-                }
-            }
+            // if (files.Any())
+            // {
+            //     foreach (string file in files)
+            //     {
+            //         Console.WriteLine($"found file: {file}");
+            //     }
+            // }
 
             try
             {
@@ -67,7 +62,6 @@ namespace NugetCheck
             {
                 Console.WriteLine($"Generic Exception caught: {e.Message}");
             }
-
             Console.WriteLine("App Completed");
         }
 

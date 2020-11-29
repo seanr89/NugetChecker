@@ -23,7 +23,7 @@ namespace NugetCheck
         /// Support the query events to the nuget service
         /// </summary>
         /// <param name="packageName">the name of the package to search for</param>
-        /// <returns></returns>
+        /// <returns>a NugetResponse model</returns>
         public async Task<NugetResponse> queryPackageByName(string packageName)
         {
             //TODO: add in some http exception handling
