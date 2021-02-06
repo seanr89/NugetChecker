@@ -44,7 +44,6 @@ namespace NugetCheck
                         {
                             String result = checkAndProcessTargetFramework(reference);
                             projectDetails.Framework = result;
-                            //Console.WriteLine($"TargetFramework : {result}");
                         }
 
                         if (reference.TrimStart().StartsWith("<PackageReference"))
@@ -72,7 +71,6 @@ namespace NugetCheck
                             }
                         }
                     }
-
                 }
                 else
                 {

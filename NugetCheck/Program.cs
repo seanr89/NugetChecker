@@ -26,14 +26,13 @@ namespace NugetCheck
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             //windows path
-            //string folderPath = @"C:\Users\seanr\Source\Workspaces\COVID_RH\src\Services\KitRegistration";
             string folderPath = @"C:\Users\seanr\Source\Repos\PersonalApps\NugetChecker";
             //mac path
             //string folderPath = @"/Users/seanrafferty/Documents/Projects/NugetChecker";
 
             try
             {
-                string inputFilePath = args[1];
+                string inputFilePath = args[0];
                 if (string.IsNullOrEmpty(inputFilePath) == false)
                     folderPath = inputFilePath;
             }
@@ -41,13 +40,6 @@ namespace NugetCheck
             Console.WriteLine($"Folder to search: {folderPath} - Searching");
             string[] files = Directory.GetFiles(folderPath, "*.csproj", SearchOption.AllDirectories);
 
-            // if (files.Any())
-            // {
-            //     foreach (string file in files)
-            //     {
-            //         Console.WriteLine($"found file: {file}");
-            //     }
-            // }
             bool attemptUpdate = Confirm("Do you want to attempt to update?");
 
             try
@@ -64,6 +56,7 @@ namespace NugetCheck
                 Console.WriteLine($"Generic Exception caught: {e.Message}");
             }
             Console.WriteLine("App Completed");
+            return;
         }
 
         /// <summary>
@@ -91,8 +84,8 @@ namespace NugetCheck
         /// <summary>
         /// Prep/Configure Dependency Injection
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="config"></param>
+        /// <param name="services">DI service layer</param>
+        /// <param name="config">App Settings configuration</param>
         private static void RegisterAndInjectServices(IServiceCollection services, IConfiguration config)
         {
             services.AddLogging(logging =>
