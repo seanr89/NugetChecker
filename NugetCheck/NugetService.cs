@@ -12,6 +12,7 @@ namespace NugetCheck
     public class NugetService
     {
         private readonly HttpClient _httpClient;
+        //Basic nuget search layer!
         private const string _ServiceIndex = "https://azuresearch-usnc.nuget.org/query?q=packageid:";
 
         public NugetService(HttpClient httpClient)

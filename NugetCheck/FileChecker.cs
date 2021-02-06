@@ -18,7 +18,7 @@ namespace NugetCheck
             _nugetService = nugetService;
         }
 
-        public async Task Execute(string[] filePaths)
+        public async Task Execute(string[] filePaths, bool attemptUpdate)
         {
             Console.WriteLine("FileChecker: Execute");
             if (!filePaths.Any())

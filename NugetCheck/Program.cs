@@ -48,11 +48,12 @@ namespace NugetCheck
             //         Console.WriteLine($"found file: {file}");
             //     }
             // }
+            bool attemptUpdate = Confirm("Do you want to attempt to update?");
 
             try
             {
                 //Asynchronous method executed with Wait added to ensure that console request is not output too early
-                serviceProvider.GetService<FileChecker>().Execute(files).Wait();
+                serviceProvider.GetService<FileChecker>().Execute(files, attemptUpdate).Wait();
             }
             catch (NotImplementedException e)
             {
