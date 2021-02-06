@@ -12,7 +12,7 @@ namespace NugetCheck
     public class NugetService
     {
         private readonly HttpClient _httpClient;
-        //Basic nuget search layer!
+        //Basic nuget search URL
         private const string _ServiceIndex = "https://azuresearch-usnc.nuget.org/query?q=packageid:";
 
         public NugetService(HttpClient httpClient)
@@ -27,19 +27,26 @@ namespace NugetCheck
         /// <returns>a NugetResponse model</returns>
         public async Task<NugetResponse> queryPackageByName(string packageName)
         {
-            //TODO: add in some http exception handling
-            var url = _ServiceIndex + packageName;
-            HttpResponseMessage response = await _httpClient.GetAsync(_ServiceIndex + packageName);
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                if (response.StatusCode != HttpStatusCode.OK)
+                var url = _ServiceIndex + packageName;
+                HttpResponseMessage response = await _httpClient.GetAsync(_ServiceIndex + packageName);
+                if (!response.IsSuccessStatusCode)
                 {
-                    return null;
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        return null;
+                    }
                 }
+                String urlContents = await response.Content.ReadAsStringAsync();
+                var jsonObject = JsonConvert.DeserializeObject<NugetResponse>(urlContents);
+                return jsonObject;
             }
-            String urlContents = await response.Content.ReadAsStringAsync();
-            var jsonObject = JsonConvert.DeserializeObject<NugetResponse>(urlContents);
-            return jsonObject;
+            catch (Exception e)
+            {
+                Console.WriteLine($"Generic Exception caught: {e.Message}");
+                return null;
+            }
         }
     }
 }
