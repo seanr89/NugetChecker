@@ -54,6 +54,8 @@ namespace NugetCheck
                             //Version - to be tidied up
                             string packageVersion = tryGetPackageVersion(reference);
 
+                            //TODO: note this could be the place to update that!
+
                             package.UpdatePackageDetails(filePath, packageName, packageVersion);
                             packages.Add(package);
                         }
@@ -106,9 +108,7 @@ namespace NugetCheck
                 //mac OR linux
                 filePathSlashIndex = filePath.LastIndexOf("/");
             }
-
             result.Name = filePath.Substring(filePathSlashIndex).Replace(".csproj", "").Trim();
-
             return result;
         }
 
@@ -138,7 +138,6 @@ namespace NugetCheck
         /// <returns>the package name</returns>
         private string tryGetPackageName(string line)
         {
-            //Console.WriteLine($"tryGetPackageName : {line}");
             int packageIndex = line.IndexOf("Include=") + "Include=".Length;
 
             string packageName = line.Substring(packageIndex);
@@ -156,7 +155,6 @@ namespace NugetCheck
         /// <returns>string formatted version number</returns>
         private string tryGetPackageVersion(string line)
         {
-            //Console.WriteLine("tryGetPackageVersion");
             int versionIndex = line.IndexOf("Version=") + "Version=".Length;
 
             string packageVersion = line.Substring(versionIndex);
