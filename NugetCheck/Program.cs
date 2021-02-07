@@ -99,7 +99,7 @@ namespace NugetCheck
 
             services.AddTransient<NugetService>();
 
-            services.AddTransient<PowershellExecutor>();
+            services.AddTransient<CmdExecutor>();
 
             services.AddHttpClient<NugetService>();
         }
