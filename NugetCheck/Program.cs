@@ -100,6 +100,7 @@ namespace NugetCheck
             services.AddTransient<NugetService>();
 
             services.AddTransient<CmdExecutor>();
+            services.AddTransient<PackageComparer>();
 
             services.AddTransient<ProjectUpdater>();
 

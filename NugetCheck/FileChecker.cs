@@ -13,6 +13,7 @@ namespace NugetCheck
         private List<PackageDetails> packages;
         private readonly NugetService _nugetService;
         private readonly PackageComparer _comparer;
+
         public FileChecker(NugetService nugetService, PackageComparer comparer)
         {
             packages = new List<PackageDetails>();

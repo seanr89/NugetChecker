@@ -33,10 +33,12 @@ namespace NugetCheck
                 {
                     //package is not on latest version!
                     Console.WriteLine($"Package: {package.Name} can be updated to version : {latestPackage.Version}");
-                    // if (update)
-                    // {
-                    //     bool updated = updater.TryExecutePowershellCmd(package.Name, package.ProjectPath);
-                    // }
+                    if (update)
+                    {
+                        bool updated = updater.TryExecuteCmd(package.Name, latestPackage.Version, project.Path);
+                        if (updated)
+                            Console.WriteLine("Updated package");
+                    }
                 }
             }
             Console.WriteLine("-------------");

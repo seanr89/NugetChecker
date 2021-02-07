@@ -22,25 +22,32 @@ namespace NugetCheck
             return false;
         }
 
-        public bool TryExecuteCmd(string packageName, string folderPath)
+        public bool TryExecuteCmd(string packageName, string packageVersion, string folderPath)
         {
-            Console.WriteLine("CmdExecutor: TryExecuteCmd");
+            Console.WriteLine($"CmdExecutor: TryExecuteCmd {packageName} and version: {packageVersion}");
             ProcessStartInfo ProcessInfo;
-            Process Process;
+            Process Process = new Process();
 
-            string command = "dotnet --version";
+            string command = CreatePackageCommand(packageName, packageVersion);
             ProcessInfo = new ProcessStartInfo("cmd.exe", "/K " + command);
-            //ProcessInfo = new ProcessStartInfo("dotnet --version");
-            ProcessInfo.CreateNoWindow = false;
+            var path = TrimPathToFolderOnly(folderPath);
+            ProcessInfo.WorkingDirectory = TrimPathToFolderOnly(folderPath);
+            ProcessInfo.CreateNoWindow = true;
             ProcessInfo.UseShellExecute = true;
-            Process = Process.Start(ProcessInfo);
+            Process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            Process.Start(ProcessInfo);
 
             return false;
         }
 
+        private string TrimPathToFolderOnly(string path)
+        {
+            return path.Substring(0, path.LastIndexOf("\\"));
+        }
+
         private string CreatePackageCommand(string package, string version)
         {
-            string cmd = $"dotnet add package {package} --version {version}";
+            string cmd = $"dotnet add package {package} -v {version}";
             return cmd;
         }
     }
