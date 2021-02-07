@@ -26,7 +26,8 @@ namespace NugetCheck
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             //windows path
-            string folderPath = @"C:\Users\seanr\Source\Repos\PersonalApps\NugetChecker";
+            //string folderPath = @"C:\Users\seanr\Source\Repos\PersonalApps\NugetChecker";
+            string folderPath = @"C:\Users\craft\Documents\Programming\GIT\NugetChecker";
             //mac path
             //string folderPath = @"/Users/seanrafferty/Documents/Projects/NugetChecker";
 
@@ -40,7 +41,7 @@ namespace NugetCheck
             Console.WriteLine($"Folder to search: {folderPath} - Searching");
             string[] files = Directory.GetFiles(folderPath, "*.csproj", SearchOption.AllDirectories);
 
-            bool attemptUpdate = Confirm("Do you want to attempt to update?");
+            bool attemptUpdate = true; //Confirm("Do you want to attempt to update?");
 
             try
             {
@@ -97,6 +98,8 @@ namespace NugetCheck
             services.AddSingleton<FileChecker>();
 
             services.AddTransient<NugetService>();
+
+            services.AddTransient<PowershellExecutor>();
 
             services.AddHttpClient<NugetService>();
         }

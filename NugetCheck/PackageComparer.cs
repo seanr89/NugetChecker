@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace NugetCheck
 {
@@ -10,10 +11,18 @@ namespace NugetCheck
         /// New process to support querying for a single project
         /// </summary>
         /// <param name="project">the project to compare and output</param>
-        public void tryComparePackagesForProjectAndLogIfOutOfDate(ProjectPackages project)
+        public void tryComparePackagesForProjectAndLogIfOutOfDate(ProjectPackages project, bool update = false)
         {
             if (!project.Packages.Any())
                 return;
+
+            CmdExecutor updater = null;
+
+            if (update && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                updater = new CmdExecutor();
+                updater.TryExecuteCmdTest();
+            }
 
             Console.WriteLine($"Project: {project.Name}\n");
 
@@ -24,6 +33,10 @@ namespace NugetCheck
                 {
                     //package is not on latest version!
                     Console.WriteLine($"Package: {package.Name} can be updated to version : {latestPackage.Version}");
+                    // if (update)
+                    // {
+                    //     bool updated = updater.TryExecutePowershellCmd(package.Name, package.ProjectPath);
+                    // }
                 }
             }
             Console.WriteLine("-------------");

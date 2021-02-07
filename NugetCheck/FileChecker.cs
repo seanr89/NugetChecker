@@ -84,7 +84,7 @@ namespace NugetCheck
             foreach (var proj in projects)
             {
                 //Ok now we need to write a checker
-                comparer.tryComparePackagesForProjectAndLogIfOutOfDate(proj);
+                comparer.tryComparePackagesForProjectAndLogIfOutOfDate(proj, attemptUpdate);
             }
         }
 
