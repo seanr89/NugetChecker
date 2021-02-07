@@ -101,6 +101,8 @@ namespace NugetCheck
 
             services.AddTransient<CmdExecutor>();
 
+            services.AddTransient<ProjectUpdater>();
+
             services.AddHttpClient<NugetService>();
         }
 

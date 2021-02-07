@@ -12,10 +12,12 @@ namespace NugetCheck
     {
         private List<PackageDetails> packages;
         private readonly NugetService _nugetService;
-        public FileChecker(NugetService nugetService)
+        private readonly PackageComparer _comparer;
+        public FileChecker(NugetService nugetService, PackageComparer comparer)
         {
             packages = new List<PackageDetails>();
             _nugetService = nugetService;
+            _comparer = comparer;
         }
 
         public async Task Execute(string[] filePaths, bool attemptUpdate)
@@ -79,12 +81,10 @@ namespace NugetCheck
                     Console.WriteLine("No file content found!");
                 }
             }
-
-            PackageComparer comparer = new PackageComparer();
             foreach (var proj in projects)
             {
                 //Ok now we need to write a checker
-                comparer.tryComparePackagesForProjectAndLogIfOutOfDate(proj, attemptUpdate);
+                _comparer.tryComparePackagesForProjectAndLogIfOutOfDate(proj, attemptUpdate);
             }
         }
 
