@@ -21,7 +21,6 @@ namespace NugetCheck
             if (update && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 updater = new CmdExecutor();
-                updater.TryExecuteCmdTest();
             }
 
             Console.WriteLine($"Project: {project.Name}\n");

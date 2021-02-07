@@ -35,6 +35,7 @@ namespace NugetCheck
             ProcessInfo.CreateNoWindow = true;
             ProcessInfo.UseShellExecute = true;
             Process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            //TODO - handle process response and potential cmd closure!
             Process.Start(ProcessInfo);
 
             return false;
