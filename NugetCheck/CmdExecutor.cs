@@ -25,30 +25,60 @@ namespace NugetCheck
         public bool TryExecuteCmd(string packageName, string packageVersion, string folderPath)
         {
             Console.WriteLine($"CmdExecutor: TryExecuteCmd {packageName} and version: {packageVersion}");
-            ProcessStartInfo ProcessInfo;
-            Process Process = new Process();
+            try
+            {
+                ProcessStartInfo ProcessInfo;
+                Process Process = new Process();
+                //Set a time-out value.
+                int timeOut = 10000;
 
-            string command = CreatePackageCommand(packageName, packageVersion);
-            ProcessInfo = new ProcessStartInfo("cmd.exe", "/K " + command);
-            var path = TrimPathToFolderOnly(folderPath);
-            ProcessInfo.WorkingDirectory = TrimPathToFolderOnly(folderPath);
-            ProcessInfo.CreateNoWindow = true;
-            ProcessInfo.UseShellExecute = true;
-            Process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            //TODO - handle process response and potential cmd closure!
-            Process.Start(ProcessInfo);
+                string command = CreatePackageCommand(packageName, packageVersion);
+                ProcessInfo = new ProcessStartInfo("cmd.exe", "/K " + command);
+                var path = TrimPathToFolderOnly(folderPath);
+                ProcessInfo.WorkingDirectory = TrimPathToFolderOnly(folderPath);
+                ProcessInfo.CreateNoWindow = true;
+                ProcessInfo.UseShellExecute = true;
+                Process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                //TODO - handle process response and potential cmd closure!
+                Process.Start(ProcessInfo);
+                //Wait for the window to finish loading.
+                Process.WaitForInputIdle();
+                //Added a step to wait for an exit
+                Process.WaitForExit(timeOut);
 
-            return false;
+                return true;
+            }
+            catch (InvalidOperationException ie)
+            {
+                return false;
+            }
+            catch
+            {
+                //some exeception has been caught
+                return false;
+            }
+
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         private string TrimPathToFolderOnly(string path)
         {
             return path.Substring(0, path.LastIndexOf("\\"));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="package"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         private string CreatePackageCommand(string package, string version)
         {
-            string cmd = $"dotnet add package {package} -v {version}";
+            string cmd = $"dotnet add package {package} -v {version} & exit";
             return cmd;
         }
     }

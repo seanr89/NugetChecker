@@ -36,7 +36,7 @@ namespace NugetCheck
                     {
                         bool updated = updater.TryExecuteCmd(package.Name, latestPackage.Version, project.Path);
                         if (updated)
-                            Console.WriteLine("Updated package");
+                            Console.WriteLine($"Updated package {package.Name}");
                     }
                 }
             }
