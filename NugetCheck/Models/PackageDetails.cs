@@ -8,11 +8,6 @@ namespace NugetCheck
 
         public NugetResponse Response { get; set; }
 
-        public PackageDetails()
-        {
-
-        }
-
         public void UpdatePackageDetails(string projectPath, string name, string version)
         {
             ProjectPath = projectPath;

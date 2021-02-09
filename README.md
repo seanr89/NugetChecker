@@ -27,20 +27,26 @@ i.e. `dotnet run .\bin\Debug\net5.0\NugetCheck.dll <Add File Path Here>`
 
 1. Add folder search for all .csproj files!
    - Created a 2nd test app to check for files in a specific folder!
-   - Done
+   - Complete
 2. Move process to checker piece and support looping across multiple projects
-   - Done
+   - Complete
 3. Updated comments and comments!
-   - Done
+   - Complete
 
-## Plan - Stage 3
+## Plan - Stage 3 : In Progress
 
 1. Update nuget package on request / approval
    - Try and update either by nuget or the file
+     - CMD event running for updating
+     - Require check to not open external window
+       - Need to attempt to close at least
 2. Report / CSV output!
    - Error checks
    - Log Messages
-   - Update/Restore
+   - Events and Steps
+3. Comments
+   - Provide detailed comments across all current process
+4. Mac Execution Tests
 
 ## Build and Publish
 

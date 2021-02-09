@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace NugetCheck
 {
+    /// <summary>
+    /// Base NugetResponse object to support querying nuget API data in general
+    /// </summary>
     public class NugetResponse
     {
         public int totalHits { get; set; }
@@ -9,7 +12,11 @@ namespace NugetCheck
         public List<NugetPackageData> data { get; set; }
     }
 
-    public class NugetPackageData{
+    /// <summary>
+    /// Detailed nuget response data that we are current/on will in future - use
+    /// /// </summary>
+    public class NugetPackageData
+    {
         public string Id { get; set; }
         public string Version { get; set; }
         public string Title { get; set; }
@@ -19,7 +26,8 @@ namespace NugetCheck
         public List<PackageVersionInfo> Versions { get; set; }
     }
 
-    public class PackageVersionInfo{
+    public class PackageVersionInfo
+    {
         public string Version { get; set; }
         public string @id { get; set; }
     }

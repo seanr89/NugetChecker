@@ -15,7 +15,7 @@ namespace NugetCheck
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Nuget Version Checker\r");
+            Console.WriteLine("Nuget Version Checker and Updater\r");
             Console.WriteLine("------------------------\n");
 
             Configuration = LoadAppSettings();
@@ -37,21 +37,24 @@ namespace NugetCheck
                 if (string.IsNullOrEmpty(inputFilePath) == false)
                     folderPath = inputFilePath;
             }
-            catch { }
+            catch
+            {
+                //TODO: should error out here as we need a file/folderpath
+            }
             Console.WriteLine($"Folder to search: {folderPath} - Searching");
             string[] files = Directory.GetFiles(folderPath, "*.csproj", SearchOption.AllDirectories);
 
-            bool attemptUpdate = true; //Confirm("Do you want to attempt to update?");
-
+            bool attemptUpdate = Confirm("Do you want to attempt to update?");
+        
             try
             {
                 //Asynchronous method executed with Wait added to ensure that console request is not output too early
                 serviceProvider.GetService<FileChecker>().Execute(files, attemptUpdate).Wait();
             }
-            catch (NotImplementedException e)
+            catch (NotImplementedException nie)
             {
-                Console.WriteLine($"Implementation Exception caught: {e.Message}");
-            }
+                Console.WriteLine($"Implementation Exception caught: {nie.Message}");
+                }
             catch (Exception e)
             {
                 Console.WriteLine($"Generic Exception caught: {e.Message}");
