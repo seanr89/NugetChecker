@@ -45,7 +45,7 @@ namespace NugetCheck
             string[] files = Directory.GetFiles(folderPath, "*.csproj", SearchOption.AllDirectories);
 
             bool attemptUpdate = Confirm("Do you want to attempt to update?");
-        
+
             try
             {
                 //Asynchronous method executed with Wait added to ensure that console request is not output too early
@@ -54,7 +54,7 @@ namespace NugetCheck
             catch (NotImplementedException nie)
             {
                 Console.WriteLine($"Implementation Exception caught: {nie.Message}");
-                }
+            }
             catch (Exception e)
             {
                 Console.WriteLine($"Generic Exception caught: {e.Message}");
@@ -103,9 +103,8 @@ namespace NugetCheck
             services.AddTransient<NugetService>();
 
             services.AddTransient<CmdExecutor>();
+            services.AddTransient<MacExecutor>();
             services.AddTransient<PackageComparer>();
-
-            services.AddTransient<ProjectUpdater>();
 
             services.AddHttpClient<NugetService>();
         }

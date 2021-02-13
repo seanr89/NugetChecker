@@ -13,8 +13,6 @@ namespace NugetCheck
 
             string command = "dotnet --version";
             ProcessInfo = new ProcessStartInfo("cmd.exe", "/K " + command);
-            //processStartInfo.WorkingDirectory = @"c:\\Windows\\Downloaded Program Files";
-            //ProcessInfo = new ProcessStartInfo("dotnet --version");
             ProcessInfo.CreateNoWindow = false;
             ProcessInfo.UseShellExecute = true;
             Process = Process.Start(ProcessInfo);

@@ -48,6 +48,12 @@ i.e. `dotnet run .\bin\Debug\net5.0\NugetCheck.dll <Add File Path Here>`
    - Provide detailed comments across all current process
 4. Mac Execution Tests
 
+## Plan 4
+
+1. Reporting Updates
+2. Improved Logging Updates
+3. New Func and Action injection for code separation
+
 ## Build and Publish
 
 run cmd `dotnet publish -r win-x64 -c Release /p:PublishSingleFile=true /p:PublishTrimmed=true`
