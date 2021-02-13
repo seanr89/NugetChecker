@@ -21,6 +21,13 @@ namespace NugetCheck
             _comparer = comparer;
         }
 
+        /// <summary>
+        /// Handles process execution
+        /// TODO: needs split to support Open/Closed Principle more
+        /// </summary>
+        /// <param name="filePaths"></param>
+        /// <param name="attemptUpdate"></param>
+        /// <returns></returns>
         public async Task Execute(string[] filePaths, bool attemptUpdate)
         {
             Console.WriteLine("FileChecker: Execute");
@@ -77,11 +84,12 @@ namespace NugetCheck
                         }
                     }
                 }
-                else
-                {
-                    Console.WriteLine("No file content found!");
-                }
+                // else
+                // {
+                //     Console.WriteLine("No file content found!");
+                // }
             }
+            //TODO: Move into a new methods
             foreach (var proj in projects)
             {
                 //Ok now we need to write a checker
@@ -120,16 +128,10 @@ namespace NugetCheck
         /// <returns></returns>
         private string checkAndProcessTargetFramework(string line)
         {
-            //Console.WriteLine("checkAndProcessTargetFramework");
-            string frameWork = "Unknown";
-
             int pFrom = line.IndexOf(">") + ">".Length;
             int pTo = line.LastIndexOf("<");
 
-            frameWork = line.Substring(pFrom, pTo - pFrom);
-            //Console.WriteLine($"TargetFramework : {result}");
-
-            return frameWork;
+            return line.Substring(pFrom, pTo - pFrom) ?? string.Empty;
         }
 
         /// <summary>

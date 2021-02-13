@@ -1,9 +1,10 @@
 using System;
 using System.Diagnostics;
+using NugetCheck.Interfaces;
 
 namespace NugetCheck
 {
-    public class CmdExecutor
+    public class CmdExecutor : INugetExecutor
     {
         public bool TryExecuteCmdTest()
         {

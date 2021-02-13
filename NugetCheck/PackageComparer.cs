@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using NugetCheck.Interfaces;
 
 namespace NugetCheck
 {
@@ -16,11 +17,16 @@ namespace NugetCheck
             if (!project.Packages.Any())
                 return;
 
-            CmdExecutor updater = null;
-
+            INugetExecutor updater;
+            //TODO: move this out to its own method!
             if (update && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 updater = new CmdExecutor();
+            }
+            else
+            {
+                updater = new MacExecutor();
+                updater.TryExecuteCmdTest();
             }
 
             Console.WriteLine($"Project: {project.Name}\n");
