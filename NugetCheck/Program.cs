@@ -99,9 +99,7 @@ namespace NugetCheck
                                                 LogLevel.Warning);
 
             services.AddSingleton<FileChecker>();
-
             services.AddTransient<NugetService>();
-
             services.AddTransient<CmdExecutor>();
             services.AddTransient<BashExecutor>();
             services.AddTransient<PackageComparer>();

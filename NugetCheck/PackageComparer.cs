@@ -19,11 +19,10 @@ namespace NugetCheck
 
             INugetExecutor updater = null;
             if (update)
-            {
                 updater = GetExecutorForOS();
-            }
 
-            Console.WriteLine($"Project: {project.Name}\n");
+
+            //Console.WriteLine($"Project: {project.Name}\n");
 
             foreach (var package in project.Packages)
             {

@@ -8,15 +8,16 @@ using System.Runtime.InteropServices;
 
 namespace NugetCheck
 {
+    /// <summary>
+    /// File checker class to start reading through the provider file list and support the update process!
+    /// </summary>
     public class FileChecker
     {
-        private List<PackageDetails> packages;
         private readonly NugetService _nugetService;
         private readonly PackageComparer _comparer;
 
         public FileChecker(NugetService nugetService, PackageComparer comparer)
         {
-            packages = new List<PackageDetails>();
             _nugetService = nugetService;
             _comparer = comparer;
         }
@@ -48,11 +49,11 @@ namespace NugetCheck
                 if (lines.Any())
                 {
                     this.ProcessProjectReferences(lines, projectDetails, filePath);
-                    projectDetails.Packages = packages;
 
-                    if (packages.Any())
+                    if (projectDetails.Packages.Any())
                     {
-                        foreach (var p in packages)
+                        //TODO: this is to be split!
+                        foreach (var p in projectDetails.Packages)
                         {
                             var nugetQueryResponse = await _nugetService.queryPackageByName(p.Name);
                             if (nugetQueryResponse != null)
@@ -76,6 +77,7 @@ namespace NugetCheck
             var result = new ProjectPackages();
             result.Path = filePath;
             int filePathSlashIndex = 0;
+            //TODO: follow open/closed and try and get rid of the else!
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 // Do something
@@ -90,18 +92,26 @@ namespace NugetCheck
             return result;
         }
 
+        /// <summary>
+        /// read each project csproj line and start to process the contents within
+        /// </summary>
+        /// <param name="lines"></param>
+        /// <param name="projectDetails"></param>
+        /// <param name="filePath"></param>
         private void ProcessProjectReferences(string[] lines, ProjectPackages projectDetails, string filePath)
         {
             //TODO : lets create a new method for this
             foreach (string reference in lines)
             {
                 //Support checks for target framework
+                //TODO: this needs to be split/moved away
                 if (reference.Contains("TargetFramework"))
                 {
                     String result = checkAndProcessTargetFramework(reference);
                     projectDetails.Framework = result;
                 }
 
+                //TODO: this needs to be split/moved away
                 if (reference.TrimStart().StartsWith("<PackageReference"))
                 {
                     var package = new PackageDetails();
@@ -111,9 +121,8 @@ namespace NugetCheck
                     string packageVersion = tryGetPackageVersion(reference);
 
                     //TODO: note this could be the place to update that!
-
                     package.UpdatePackageDetails(filePath, packageName, packageVersion);
-                    packages.Add(package);
+                    projectDetails.Packages.Add(package);
                 }
             }
         }

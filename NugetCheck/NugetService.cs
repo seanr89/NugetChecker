@@ -8,6 +8,7 @@ namespace NugetCheck
 {
     /// <summary>
     /// https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests
+    /// Nuget querying tool to search for a provide package within the nuget API toolset
     /// </summary>
     public class NugetService
     {
@@ -24,7 +25,7 @@ namespace NugetCheck
         /// Support the query events to the nuget service
         /// </summary>
         /// <param name="packageName">the name of the package to search for</param>
-        /// <returns>a NugetResponse model</returns>
+        /// <returns>a NugetResponse model or null</returns>
         public async Task<NugetResponse> queryPackageByName(string packageName)
         {
             try
@@ -33,14 +34,10 @@ namespace NugetCheck
                 HttpResponseMessage response = await _httpClient.GetAsync(_ServiceIndex + packageName);
                 if (!response.IsSuccessStatusCode)
                 {
-                    if (response.StatusCode != HttpStatusCode.OK)
-                    {
-                        return null;
-                    }
+                    return null;
                 }
                 String urlContents = await response.Content.ReadAsStringAsync();
-                var jsonObject = JsonConvert.DeserializeObject<NugetResponse>(urlContents);
-                return jsonObject;
+                return JsonConvert.DeserializeObject<NugetResponse>(urlContents);
             }
             catch (Exception e)
             {
