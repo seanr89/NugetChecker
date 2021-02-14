@@ -47,6 +47,7 @@ i.e. `dotnet run .\bin\Debug\net5.0\NugetCheck.dll <Add File Path Here>`
 3. Comments
    - Provide detailed comments across all current process
 4. Mac Execution Tests
+   - Complete
 
 ## Plan 4
 
