@@ -84,17 +84,8 @@ namespace NugetCheck
                         }
                     }
                 }
-                // else
-                // {
-                //     Console.WriteLine("No file content found!");
-                // }
             }
-            //TODO: Move into a new methods
-            foreach (var proj in projects)
-            {
-                //Ok now we need to write a checker
-                _comparer.tryComparePackagesForProjectAndLogIfOutOfDate(proj, attemptUpdate);
-            }
+            this.RunPackageChecksForProjects(projects, attemptUpdate);
         }
 
         /// <summary>
@@ -120,6 +111,17 @@ namespace NugetCheck
             result.Name = filePath.Substring(filePathSlashIndex).Replace(".csproj", "").Trim();
             return result;
         }
+
+        private void RunPackageChecksForProjects(List<ProjectPackages> projects, bool attemptUpdate)
+        {
+            foreach (var proj in projects)
+            {
+                //Ok now we need to write a checker
+                _comparer.tryComparePackagesForProjectAndLogIfOutOfDate(proj, attemptUpdate);
+            }
+        }
+
+        #region Private File Project
 
         /// <summary>
         /// Query the content of a project framework version
@@ -163,8 +165,9 @@ namespace NugetCheck
             string packageVersion = line.Substring(versionIndex);
             packageVersion = packageVersion.Replace("\"", "");
             packageVersion = packageVersion.Replace("/>", "").Trim();
-
             return packageVersion;
         }
+
+        #endregion
     }
 }

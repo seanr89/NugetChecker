@@ -17,16 +17,10 @@ namespace NugetCheck
             if (!project.Packages.Any())
                 return;
 
-            INugetExecutor updater;
-            //TODO: move this out to its own method!
-            if (update && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            INugetExecutor updater = null;
+            if (update)
             {
-                updater = new CmdExecutor();
-            }
-            else
-            {
-                updater = new MacExecutor();
-                updater.TryExecuteCmdTest();
+                updater = GetExecutorForOS();
             }
 
             Console.WriteLine($"Project: {project.Name}\n");
@@ -47,6 +41,16 @@ namespace NugetCheck
                 }
             }
             Console.WriteLine("-------------");
+        }
+
+        private INugetExecutor GetExecutorForOS()
+        {
+            //TODO: move this out to its own method!
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return new CmdExecutor();
+            }
+            return new BashExecutor();
         }
     }
 }

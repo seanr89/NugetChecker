@@ -4,7 +4,7 @@ using NugetCheck.Interfaces;
 
 namespace NugetCheck
 {
-    public class MacExecutor : INugetExecutor
+    public class BashExecutor : INugetExecutor
     {
         public bool TryExecuteCmdTest()
         {

@@ -103,7 +103,7 @@ namespace NugetCheck
             services.AddTransient<NugetService>();
 
             services.AddTransient<CmdExecutor>();
-            services.AddTransient<MacExecutor>();
+            services.AddTransient<BashExecutor>();
             services.AddTransient<PackageComparer>();
 
             services.AddHttpClient<NugetService>();
