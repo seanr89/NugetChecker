@@ -42,29 +42,34 @@ namespace NugetCheck
             {
                 //support initialisation of model to maintain details for a single project!
                 var projectDetails = initialiseProjectPackage(filePath);
-                projects.Add(projectDetails);
-
                 //Now split the file up into its individual lines
                 string[] lines = await File.ReadAllLinesAsync(filePath);
-                if (lines.Any())
-                {
-                    this.ProcessProjectReferences(lines, projectDetails, filePath);
+                this.ProcessProjectReferences(lines, projectDetails, filePath);
+                await QueryPackUpdatesForProject(projectDetails);
 
-                    if (projectDetails.Packages.Any())
+                projects.Add(projectDetails);
+            }
+            this.RunPackageChecksForProjects(projects, attemptUpdate);
+        }
+
+        /// <summary>
+        /// Supports the dedicated querying of package update parameters from nuget!
+        /// </summary>
+        /// <param name="projectDetails"></param>
+        /// <returns></returns>
+        private async Task QueryPackUpdatesForProject(ProjectPackages projectDetails)
+        {
+            if (projectDetails.Packages.Any())
+            {
+                foreach (var p in projectDetails.Packages)
+                {
+                    var nugetQueryResponse = await _nugetService.queryPackageByName(p.Name);
+                    if (nugetQueryResponse != null)
                     {
-                        //TODO: this is to be split!
-                        foreach (var p in projectDetails.Packages)
-                        {
-                            var nugetQueryResponse = await _nugetService.queryPackageByName(p.Name);
-                            if (nugetQueryResponse != null)
-                            {
-                                p.Response = nugetQueryResponse;
-                            }
-                        }
+                        p.Response = (NugetResponse)nugetQueryResponse;
                     }
                 }
             }
-            this.RunPackageChecksForProjects(projects, attemptUpdate);
         }
 
         /// <summary>
@@ -100,6 +105,8 @@ namespace NugetCheck
         /// <param name="filePath"></param>
         private void ProcessProjectReferences(string[] lines, ProjectPackages projectDetails, string filePath)
         {
+            if (!lines.Any())
+                return;
             //TODO : lets create a new method for this
             foreach (string reference in lines)
             {

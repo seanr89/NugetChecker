@@ -26,7 +26,7 @@ namespace NugetCheck
         /// </summary>
         /// <param name="packageName">the name of the package to search for</param>
         /// <returns>a NugetResponse model or null</returns>
-        public async Task<NugetResponse> queryPackageByName(string packageName)
+        public async Task<NugetResponse?> queryPackageByName(string packageName)
         {
             try
             {
