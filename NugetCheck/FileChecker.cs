@@ -47,29 +47,7 @@ namespace NugetCheck
                 string[] lines = await File.ReadAllLinesAsync(filePath);
                 if (lines.Any())
                 {
-                    foreach (string reference in lines)
-                    {
-                        //Support checks for target framework
-                        if (reference.Contains("TargetFramework"))
-                        {
-                            String result = checkAndProcessTargetFramework(reference);
-                            projectDetails.Framework = result;
-                        }
-
-                        if (reference.TrimStart().StartsWith("<PackageReference"))
-                        {
-                            var package = new PackageDetails();
-                            //Package name - to be tidied up!
-                            string packageName = tryGetPackageName(reference);
-                            //Version - to be tidied up
-                            string packageVersion = tryGetPackageVersion(reference);
-
-                            //TODO: note this could be the place to update that!
-
-                            package.UpdatePackageDetails(filePath, packageName, packageVersion);
-                            packages.Add(package);
-                        }
-                    }
+                    this.ProcessProjectReferences(lines, projectDetails, filePath);
                     projectDetails.Packages = packages;
 
                     if (packages.Any())
@@ -112,6 +90,39 @@ namespace NugetCheck
             return result;
         }
 
+        private void ProcessProjectReferences(string[] lines, ProjectPackages projectDetails, string filePath)
+        {
+            //TODO : lets create a new method for this
+            foreach (string reference in lines)
+            {
+                //Support checks for target framework
+                if (reference.Contains("TargetFramework"))
+                {
+                    String result = checkAndProcessTargetFramework(reference);
+                    projectDetails.Framework = result;
+                }
+
+                if (reference.TrimStart().StartsWith("<PackageReference"))
+                {
+                    var package = new PackageDetails();
+                    //Package name - to be tidied up!
+                    string packageName = tryGetPackageName(reference);
+                    //Version - to be tidied up
+                    string packageVersion = tryGetPackageVersion(reference);
+
+                    //TODO: note this could be the place to update that!
+
+                    package.UpdatePackageDetails(filePath, packageName, packageVersion);
+                    packages.Add(package);
+                }
+            }
+        }
+
+        /// <summary>
+        /// TODO : add simple comment
+        /// </summary>
+        /// <param name="projects"></param>
+        /// <param name="attemptUpdate"></param>
         private void RunPackageChecksForProjects(List<ProjectPackages> projects, bool attemptUpdate)
         {
             foreach (var proj in projects)
