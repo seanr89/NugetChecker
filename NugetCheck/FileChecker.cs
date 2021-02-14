@@ -107,30 +107,35 @@ namespace NugetCheck
         {
             if (!lines.Any())
                 return;
-            //TODO : lets create a new method for this
             foreach (string reference in lines)
             {
-                //Support checks for target framework
-                //TODO: this needs to be split/moved away
-                if (reference.Contains("TargetFramework"))
-                {
-                    String result = checkAndProcessTargetFramework(reference);
-                    projectDetails.Framework = result;
-                }
+                GetProjectTargetFramework(projectDetails, reference);
+                FindAndParsePackageReference(projectDetails, filePath, reference);
+            }
+        }
 
-                //TODO: this needs to be split/moved away
-                if (reference.TrimStart().StartsWith("<PackageReference"))
-                {
-                    var package = new PackageDetails();
-                    //Package name - to be tidied up!
-                    string packageName = tryGetPackageName(reference);
-                    //Version - to be tidied up
-                    string packageVersion = tryGetPackageVersion(reference);
+        private void FindAndParsePackageReference(ProjectPackages projectDetails, string filePath, string reference)
+        {
+            if (reference.TrimStart().StartsWith("<PackageReference"))
+            {
+                var package = new PackageDetails();
+                //Package name - to be tidied up!
+                string packageName = tryGetPackageName(reference);
+                //Version - to be tidied up
+                string packageVersion = tryGetPackageVersion(reference);
 
-                    //TODO: note this could be the place to update that!
-                    package.UpdatePackageDetails(filePath, packageName, packageVersion);
-                    projectDetails.Packages.Add(package);
-                }
+                //TODO: note this could be the place to update that!
+                package.UpdatePackageDetails(filePath, packageName, packageVersion);
+                projectDetails.Packages.Add(package);
+            }
+        }
+
+        private void GetProjectTargetFramework(ProjectPackages projectDetails, string reference)
+        {
+            if (reference.Contains("TargetFramework"))
+            {
+                String result = checkAndProcessTargetFramework(reference);
+                projectDetails.Framework = result;
             }
         }
 
