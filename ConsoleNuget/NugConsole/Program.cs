@@ -44,6 +44,8 @@ namespace NugConsole
         /// <param name="services"></param>
         /// <param name="config"></param>
         private static void RegisterAndInjectServices(IServiceCollection services, IConfiguration config)
-        { }
+        {
+            this.AddApplication();
+        }
     }
 }
