@@ -14,6 +14,21 @@ namespace NugConsole
 
             var serviceCollection = new ServiceCollection();
             RegisterAndInjectServices(serviceCollection, Configuration);
+
+            //Initialise netcore dependency injection provider
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+            //Initialise folderpath param and check for argument var!
+            string folderPath = "";
+            try
+            {
+                string inputFilePath = args[0];
+                if (string.IsNullOrEmpty(inputFilePath) == false)
+                    folderPath = inputFilePath;
+            }
+            catch
+            {
+                //TODO: should error out here as we need a file/folderpath
+            }
         }
 
         /// <summary>
