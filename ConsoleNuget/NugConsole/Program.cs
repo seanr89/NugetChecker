@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NugConsole
 {
@@ -29,6 +32,18 @@ namespace NugConsole
             {
                 //TODO: should error out here as we need a file/folderpath
             }
+
+            ConsoleMethods.EnableCloseOnCtrlC();
+
+            //Initialise the bartender and inject console inputs and outputs into it
+            var searcher = new FolderSearcher(Console.ReadLine, Console.WriteLine);
+
+            while(true)
+            {
+
+            }
+
+            Console.WriteLine("Closing App");
         }
 
         /// <summary>

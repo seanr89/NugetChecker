@@ -1,6 +1,6 @@
 using System;
 
-namespace ConsoleNug
+namespace NugConsole
 {
     /// <summary>
     /// Helper class to simplify styling and formatting of the excel worksheet
@@ -26,6 +26,19 @@ namespace ConsoleNug
             } while (response != ConsoleKey.Y && response != ConsoleKey.N);
 
             return (response == ConsoleKey.Y);
+        }
+
+        public static void EnableCloseOnCtrlC()
+        {
+            //Handle cancellation/closure events
+            var cts = new CancellationTokenSource();
+            Console.CancelKeyPress += async (sender, a) =>
+            {
+                a.Cancel = true;
+                cts.Cancel();
+                //await connection.InvokeAsync("sendMessage", "ConsoleClient", $"{_userName} has left");
+                Environment.Exit(0);
+            };
         }
     }
 }
