@@ -2,6 +2,7 @@
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Application;
 
 namespace NugConsole
 {
@@ -36,11 +37,24 @@ namespace NugConsole
             ConsoleMethods.EnableCloseOnCtrlC();
 
             //Initialise the bartender and inject console inputs and outputs into it
-            var searcher = new FolderSearcher(Console.ReadLine, Console.WriteLine);
+            // var searcher = new FolderSearcher(Console.ReadLine, Console.WriteLine);
+            // while(true)
+            // {
+            //     //TODO!
+            // }
 
-            while(true)
+            try
             {
-
+                //Asynchronous method executed with Wait added to ensure that console request is not output too early
+                serviceProvider.GetService<FolderSearcher>().Run().Wait();
+            }
+            catch (NotImplementedException nie)
+            {
+                Console.WriteLine($"Implementation Exception caught: {nie.Message}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Generic Exception caught: {e.Message}");
             }
 
             Console.WriteLine("Closing App");
@@ -75,7 +89,7 @@ namespace NugConsole
         /// <param name="config"></param>
         private static void RegisterAndInjectServices(IServiceCollection services, IConfiguration config)
         {
-            this.AddApplication();
+            services.AddApplication();
         }
     }
 }

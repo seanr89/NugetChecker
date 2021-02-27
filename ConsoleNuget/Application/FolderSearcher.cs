@@ -11,5 +11,13 @@ namespace Application
             _inputProvider = inputProvider;
             _outputProvider = outputProvider;
         }
+
+        /// <summary>
+        /// First step to start the searching process!
+        /// </summary>
+        public void Run()
+        {
+
+        }
     }
 }

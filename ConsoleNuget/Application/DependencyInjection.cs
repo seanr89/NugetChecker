@@ -5,6 +5,7 @@ namespace Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+            services.AddTransient<FolderSearcher>();
             return services;
         }
     }
