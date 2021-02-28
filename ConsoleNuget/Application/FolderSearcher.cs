@@ -61,13 +61,5 @@ namespace Application
         {
             return _filehandler.ReadFileAndProcessContents(filePath);
         }
-
-        /// <summary>
-        /// First step to start the searching process!
-        /// </summary>
-        public void Run()
-        {
-
-        }
     }
 }
