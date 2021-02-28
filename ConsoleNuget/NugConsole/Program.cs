@@ -1,8 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Application;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Application;
+using Microsoft.Extensions.Logging;
 
 namespace NugConsole
 {
@@ -13,7 +16,7 @@ namespace NugConsole
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!\r");
-            Console.WriteLine("\n");
+            // Console.WriteLine("\n");
             Configuration = LoadAppSettings();
 
             var serviceCollection = new ServiceCollection();
@@ -22,31 +25,21 @@ namespace NugConsole
             //Initialise netcore dependency injection provider
             var serviceProvider = serviceCollection.BuildServiceProvider();
             //Initialise folderpath param and check for argument var!
-            string folderPath = "";
+            string folderPath = Directory.GetCurrentDirectory();
             try
             {
                 string inputFilePath = args[0];
                 if (string.IsNullOrEmpty(inputFilePath) == false)
                     folderPath = inputFilePath;
             }
-            catch
-            {
-                //TODO: should error out here as we need a file/folderpath
-            }
+            catch { }
 
             ConsoleMethods.EnableCloseOnCtrlC();
-
-            //Initialise the bartender and inject console inputs and outputs into it
-            // var searcher = new FolderSearcher(Console.ReadLine, Console.WriteLine);
-            // while(true)
-            // {
-            //     //TODO!
-            // }
 
             try
             {
                 //Asynchronous method executed with Wait added to ensure that console request is not output too early
-                serviceProvider.GetService<FolderSearcher>().Run().Wait();
+                serviceProvider.GetService<FolderSearcher>().Run(folderPath);
             }
             catch (NotImplementedException nie)
             {
@@ -56,7 +49,7 @@ namespace NugConsole
             {
                 Console.WriteLine($"Generic Exception caught: {e.Message}");
             }
-
+            //Console.ReadLine();
             Console.WriteLine("Closing App");
         }
 
@@ -89,6 +82,11 @@ namespace NugConsole
         /// <param name="config"></param>
         private static void RegisterAndInjectServices(IServiceCollection services, IConfiguration config)
         {
+            services.AddLogging(logging =>
+            {
+                logging.AddConsole();
+            }).Configure<LoggerFilterOptions>(options => options.MinLevel =
+                                                LogLevel.Trace);
             services.AddApplication();
         }
     }

@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace NugConsole
+namespace Application
 {
     /// <summary>
     /// Helper class to simplify styling and formatting of the excel worksheet
@@ -33,10 +33,11 @@ namespace NugConsole
         {
             //Handle cancellation/closure events
             var cts = new CancellationTokenSource();
-            Console.CancelKeyPress += async (sender, a) =>
+            Console.CancelKeyPress += (sender, a) =>
             {
                 a.Cancel = true;
                 cts.Cancel();
+                Console.WriteLine("EnableCloseOnCtrlC");
                 //await connection.InvokeAsync("sendMessage", "ConsoleClient", $"{_userName} has left");
                 Environment.Exit(0);
             };
