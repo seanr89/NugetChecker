@@ -32,11 +32,7 @@ namespace NugConsole
                 if (string.IsNullOrEmpty(inputFilePath) == false)
                     folderPath = inputFilePath;
             }
-            catch
-            {
-                //TODO: should error out here as we need a file/folderpath
-                Console.WriteLine("No folder path provided!");
-            }
+            catch { }
 
             ConsoleMethods.EnableCloseOnCtrlC();
 
@@ -90,7 +86,7 @@ namespace NugConsole
             {
                 logging.AddConsole();
             }).Configure<LoggerFilterOptions>(options => options.MinLevel =
-                                                LogLevel.Warning);
+                                                LogLevel.Trace);
             services.AddApplication();
         }
     }
