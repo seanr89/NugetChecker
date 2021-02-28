@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace NugConsole
+namespace Application
 {
     /// <summary>
     /// Helper class to simplify styling and formatting of the excel worksheet

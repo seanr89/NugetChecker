@@ -25,7 +25,7 @@ namespace NugConsole
             //Initialise netcore dependency injection provider
             var serviceProvider = serviceCollection.BuildServiceProvider();
             //Initialise folderpath param and check for argument var!
-            string folderPath = "";
+            string folderPath = Directory.GetCurrentDirectory();
             try
             {
                 string inputFilePath = args[0];
@@ -43,7 +43,7 @@ namespace NugConsole
             try
             {
                 //Asynchronous method executed with Wait added to ensure that console request is not output too early
-                serviceProvider.GetService<FolderSearcher>().Run();
+                serviceProvider.GetService<FolderSearcher>().Run(folderPath);
             }
             catch (NotImplementedException nie)
             {
