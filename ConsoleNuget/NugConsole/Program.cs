@@ -1,7 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Application;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace NugConsole
 {
@@ -12,7 +16,7 @@ namespace NugConsole
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!\r");
-            Console.WriteLine("\n");
+            // Console.WriteLine("\n");
             Configuration = LoadAppSettings();
 
             var serviceCollection = new ServiceCollection();
@@ -31,18 +35,25 @@ namespace NugConsole
             catch
             {
                 //TODO: should error out here as we need a file/folderpath
+                Console.WriteLine("No folder path provided!");
             }
 
             ConsoleMethods.EnableCloseOnCtrlC();
 
-            //Initialise the bartender and inject console inputs and outputs into it
-            var searcher = new FolderSearcher(Console.ReadLine, Console.WriteLine);
-
-            while(true)
+            try
             {
-
+                //Asynchronous method executed with Wait added to ensure that console request is not output too early
+                serviceProvider.GetService<FolderSearcher>().Run();
             }
-
+            catch (NotImplementedException nie)
+            {
+                Console.WriteLine($"Implementation Exception caught: {nie.Message}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Generic Exception caught: {e.Message}");
+            }
+            //Console.ReadLine();
             Console.WriteLine("Closing App");
         }
 
@@ -75,7 +86,12 @@ namespace NugConsole
         /// <param name="config"></param>
         private static void RegisterAndInjectServices(IServiceCollection services, IConfiguration config)
         {
-            this.AddApplication();
+            services.AddLogging(logging =>
+            {
+                logging.AddConsole();
+            }).Configure<LoggerFilterOptions>(options => options.MinLevel =
+                                                LogLevel.Warning);
+            services.AddApplication();
         }
     }
 }
