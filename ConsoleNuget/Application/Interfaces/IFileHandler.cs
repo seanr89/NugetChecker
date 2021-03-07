@@ -4,6 +4,6 @@ namespace Application.Interfaces
 {
     public interface IFileHandler
     {
-        bool ReadFileAndProcessContents(string filePath);
+        Task<bool> ReadFileAndProcessContents(string filePath);
     }
 }

@@ -43,7 +43,7 @@ namespace Application
             foreach (string filePath in files)
             {
                 _logger.LogInformation(filePath);
-                var result = TrySearch(filePath);
+                var result = TrySearchAsync(filePath);
                 if (stepSearch)
                 {
                     _outputProvider($"Scan next file press any key");
@@ -57,9 +57,9 @@ namespace Application
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        private bool TrySearch(string filePath)
+        private async System.Threading.Tasks.Task<bool> TrySearchAsync(string filePath)
         {
-            return _filehandler.ReadFileAndProcessContents(filePath);
+            return await _filehandler.ReadFileAndProcessContents(filePath);
         }
     }
 }

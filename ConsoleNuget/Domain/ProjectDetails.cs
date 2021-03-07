@@ -6,6 +6,6 @@ namespace Domain
         public string Path { get; set; }
         public string Name { get; set; }
         public string Framework { get; set; }
-        public List<PackageInfo> Packages { get; set; }
+        public List<PackageInfo> Packages { get; set; } = new List<PackageInfo>();
     }
 }
