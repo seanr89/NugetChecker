@@ -15,7 +15,7 @@ namespace NugConsole
         private static string env { get; set; }
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!\r");
+            Console.WriteLine("Console Nuget!\r");
             // Console.WriteLine("\n");
             Configuration = LoadAppSettings();
 
