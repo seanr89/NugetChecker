@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -71,6 +72,11 @@ namespace Application.Services
             }
         }
 
+        /// <summary>
+        /// TODO: detail and explain
+        /// </summary>
+        /// <param name="lines"></param>
+        /// <param name="project"></param>
         private void TryGetProjectTargetFramework(string[] lines, ProjectDetails project)
         {
             foreach (string lineRecord in lines)
@@ -81,6 +87,17 @@ namespace Application.Services
                     return;
                 }
             }
+        }
+
+        /// <summary>
+        /// TODO: detail and explain
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="reference"></param>
+        /// <returns></returns>
+        private PackageInfo FindAndParsePackageReference(string filePath, string reference)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
