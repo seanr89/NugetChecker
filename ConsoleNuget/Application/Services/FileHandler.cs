@@ -27,6 +27,7 @@ namespace Application.Services
             string[] lines = await File.ReadAllLinesAsync(filePath);
 
             project.Name = GetProjectNameFromPath(filePath);
+            TryGetProjectTargetFramework(lines, project);
             return false;
         }
 
@@ -63,8 +64,37 @@ namespace Application.Services
         {
             if (!lines.Any())
                 return;
+
+            foreach (string lineRec in lines)
+            {
+
+            }
         }
 
+        private void TryGetProjectTargetFramework(string[] lines, ProjectDetails project)
+        {
+            foreach (string lineRecord in lines)
+            {
+                if (lineRecord.Contains("TargetFramework"))
+                {
+                    project.Framework = checkAndProcessTargetFramework(lineRecord);
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Query the content of a project framework version
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        private string checkAndProcessTargetFramework(string line)
+        {
+            int pFrom = line.IndexOf(">") + ">".Length;
+            int pTo = line.LastIndexOf("<");
+
+            return line.Substring(pFrom, pTo - pFrom) ?? string.Empty;
+        }
 
         #endregion
     }
