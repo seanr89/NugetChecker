@@ -1,7 +1,9 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Application.Interfaces;
+using Domain;
 using Microsoft.Extensions.Logging;
 
 namespace Application
@@ -34,7 +36,7 @@ namespace Application
         }
 
         /// <summary>
-        /// 
+        /// Support the processing of all of each found file!
         /// </summary>
         /// <param name="files"></param>
         private void ProcessFiles(string[] files)
@@ -57,9 +59,9 @@ namespace Application
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        private bool TryProcessFile(string filePath)
+        private async Task<ProjectDetails> TryProcessFile(string filePath)
         {
-            return _filehandler.ReadFileAndProcessContents(filePath);
+            return await _filehandler.ReadFileAndProcessContents(filePath);
         }
     }
 }

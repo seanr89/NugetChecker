@@ -1,9 +1,10 @@
 using System.Threading.Tasks;
+using Domain;
 
 namespace Application.Interfaces
 {
     public interface IFileHandler
     {
-        bool ReadFileAndProcessContents(string filePath);
+        Task<ProjectDetails> ReadFileAndProcessContents(string filePath);
     }
 }
