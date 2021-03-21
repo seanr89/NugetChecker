@@ -33,5 +33,18 @@ namespace Application.Services
             packageVersion = packageVersion.Replace("/>", "").Trim();
             return packageVersion;
         }
+
+        /// <summary>
+        /// Query the content of a project framework version
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        public string checkAndProcessTargetFramework(string line)
+        {
+            int pFrom = line.IndexOf(">") + ">".Length;
+            int pTo = line.LastIndexOf("<");
+
+            return line.Substring(pFrom, pTo - pFrom) ?? string.Empty;
+        }
     }
 }

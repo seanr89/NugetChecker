@@ -43,18 +43,7 @@ namespace Application.Services
         /// <returns></returns>
         private string GetProjectNameFromPath(string filePath)
         {
-            int filePathSlashIndex = 0;
-            //TODO: follow open/closed and try and get rid of the else!
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                // Do something
-                filePathSlashIndex = filePath.LastIndexOf("\\");
-            }
-            else
-            {
-                //mac OR linux
-                filePathSlashIndex = filePath.LastIndexOf("/");
-            }
+            int filePathSlashIndex = getFilePathSlashIndex(filePath);
             return filePath.Substring(filePathSlashIndex).Replace(".csproj", "").Trim();
         }
 
@@ -77,15 +66,15 @@ namespace Application.Services
         /// <summary>
         /// Read each line and try to process the target framework into the project
         /// </summary>
-        /// <param name="lines"></param>
-        /// <param name="project"></param>
+        /// <param name="lines">All provided file lines</param>
+        /// <param name="project">the project record to be updated!</param>
         private void TryGetProjectTargetFramework(string[] lines, ProjectDetails project)
         {
             foreach (string lineRecord in lines)
             {
                 if (lineRecord.Contains("TargetFramework"))
                 {
-                    project.Framework = checkAndProcessTargetFramework(lineRecord);
+                    project.Framework = _lineReader.checkAndProcessTargetFramework(lineRecord);
                     return;
                 }
             }
@@ -101,61 +90,24 @@ namespace Application.Services
             PackageInfo res = null;
             if (line.TrimStart().StartsWith("<PackageReference"))
             {
-                res.Name = tryGetPackageName(line);
+                res.Name = _lineReader.tryGetPackageName(line);
                 //Version - to be tidied up
-                res.CurrentVersion = tryGetPackageVersion(line);
+                res.CurrentVersion = _lineReader.tryGetPackageVersion(line);
             }
             return res;
         }
 
-        /// <summary>
-        /// Query the content of a project framework version
-        /// </summary>
-        /// <param name="line"></param>
-        /// <returns></returns>
-        private string checkAndProcessTargetFramework(string line)
+        private int getFilePathSlashIndex(string filePath)
         {
-            int pFrom = line.IndexOf(">") + ">".Length;
-            int pTo = line.LastIndexOf("<");
-
-            return line.Substring(pFrom, pTo - pFrom) ?? string.Empty;
+            //TODO: follow open/closed and try and get rid of the else!
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                // Do something
+                return filePath.LastIndexOf("\\");
+            }
+            //mac OR linux
+            return filePath.LastIndexOf("/");
         }
-
-        #region package line - processes
-
-        // /// <summary>
-        // /// check the provided line for the included name
-        // /// </summary>
-        // /// <param name="line">file line</param>
-        // /// <returns>the package name</returns>
-        // private string tryGetPackageName(string line)
-        // {
-        //     int packageIndex = line.IndexOf("Include=") + "Include=".Length;
-
-        //     string packageName = line.Substring(packageIndex);
-        //     int versionStart = packageName.IndexOf("Version=");
-        //     packageName = packageName.Remove(versionStart);
-        //     packageName = packageName.Replace("\"", "").Trim();
-
-        //     return packageName;
-        // }
-
-        // /// <summary>
-        // /// check the provided line for the included package name version
-        // /// </summary>
-        // /// <param name="line">file line</param>
-        // /// <returns>string formatted version number</returns>
-        // private string tryGetPackageVersion(string line)
-        // {
-        //     int versionIndex = line.IndexOf("Version=") + "Version=".Length;
-
-        //     string packageVersion = line.Substring(versionIndex);
-        //     packageVersion = packageVersion.Replace("\"", "");
-        //     packageVersion = packageVersion.Replace("/>", "").Trim();
-        //     return packageVersion;
-        // }
-
-        #endregion
 
         #endregion
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,15 +15,18 @@ namespace Application
         private readonly Func<string> _inputProvider;
         private readonly Action<string> _outputProvider;
         private readonly IFileHandler _filehandler;
+        private readonly List<ProjectDetails> _projects;
+
         public FolderSearcher(ILogger<FolderSearcher> logger, IFileHandler fileHandler)
         {
             _logger = logger;
             _filehandler = fileHandler;
             _inputProvider = Console.ReadLine;
             _outputProvider = Console.WriteLine;
+            _projects = new List<ProjectDetails>();
         }
 
-        public void Run(string folderPath)
+        public async Task Run(string folderPath)
         {
             _outputProvider($"Run : {folderPath}");
             //_logger.LogInformation("FolderSearcher:Run");
@@ -33,19 +37,21 @@ namespace Application
             if (!files.Any())
                 return;
             var stepSearch = ConsoleMethods.Confirm("Do you wish to search each project invidually?");
-            this.ProcessFiles(files, stepSearch);
+            await this.ProcessFiles(files, stepSearch);
         }
 
         /// <summary>
         /// Support the processing of all of each found file!
         /// </summary>
         /// <param name="files"></param>
-        private void ProcessFiles(string[] files, bool stepSearch)
+        private async Task ProcessFiles(string[] files, bool stepSearch)
         {
             foreach (string filePath in files)
             {
                 _logger.LogInformation(filePath);
-                var result = TryProcessFile(filePath);
+                var result = await TryProcessFile(filePath);
+                _projects.Add(result);
+
                 if (stepSearch)
                 {
                     _outputProvider($"Scan next file press any key");
