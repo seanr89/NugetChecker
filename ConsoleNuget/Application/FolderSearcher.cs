@@ -32,16 +32,16 @@ namespace Application
 
             if (!files.Any())
                 return;
-            this.ProcessFiles(files);
+            var stepSearch = ConsoleMethods.Confirm("Do you wish to search each project invidually?");
+            this.ProcessFiles(files, stepSearch);
         }
 
         /// <summary>
         /// Support the processing of all of each found file!
         /// </summary>
         /// <param name="files"></param>
-        private void ProcessFiles(string[] files)
+        private void ProcessFiles(string[] files, bool stepSearch)
         {
-            var stepSearch = ConsoleMethods.Confirm("Do you wish to search each project invidually?");
             foreach (string filePath in files)
             {
                 _logger.LogInformation(filePath);
@@ -49,7 +49,7 @@ namespace Application
                 if (stepSearch)
                 {
                     _outputProvider($"Scan next file press any key");
-                    var drink = _inputProvider() ?? string.Empty;
+                    var response = _inputProvider() ?? string.Empty;
                 }
             }
         }

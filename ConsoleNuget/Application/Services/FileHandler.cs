@@ -12,9 +12,11 @@ namespace Application.Services
     public class FileHandler : IFileHandler
     {
         private readonly ILogger<FileHandler> _logger;
-        public FileHandler(ILogger<FileHandler> logger)
+        private readonly LineReader _lineReader;
+        public FileHandler(ILogger<FileHandler> logger, LineReader lineReader)
         {
             _logger = logger;
+            _lineReader = lineReader;
         }
 
         public async Task<ProjectDetails> ReadFileAndProcessContents(string filePath)
@@ -121,37 +123,37 @@ namespace Application.Services
 
         #region package line - processes
 
-        /// <summary>
-        /// check the provided line for the included name
-        /// </summary>
-        /// <param name="line">file line</param>
-        /// <returns>the package name</returns>
-        private string tryGetPackageName(string line)
-        {
-            int packageIndex = line.IndexOf("Include=") + "Include=".Length;
+        // /// <summary>
+        // /// check the provided line for the included name
+        // /// </summary>
+        // /// <param name="line">file line</param>
+        // /// <returns>the package name</returns>
+        // private string tryGetPackageName(string line)
+        // {
+        //     int packageIndex = line.IndexOf("Include=") + "Include=".Length;
 
-            string packageName = line.Substring(packageIndex);
-            int versionStart = packageName.IndexOf("Version=");
-            packageName = packageName.Remove(versionStart);
-            packageName = packageName.Replace("\"", "").Trim();
+        //     string packageName = line.Substring(packageIndex);
+        //     int versionStart = packageName.IndexOf("Version=");
+        //     packageName = packageName.Remove(versionStart);
+        //     packageName = packageName.Replace("\"", "").Trim();
 
-            return packageName;
-        }
+        //     return packageName;
+        // }
 
-        /// <summary>
-        /// check the provided line for the included package name version
-        /// </summary>
-        /// <param name="line">file line</param>
-        /// <returns>string formatted version number</returns>
-        private string tryGetPackageVersion(string line)
-        {
-            int versionIndex = line.IndexOf("Version=") + "Version=".Length;
+        // /// <summary>
+        // /// check the provided line for the included package name version
+        // /// </summary>
+        // /// <param name="line">file line</param>
+        // /// <returns>string formatted version number</returns>
+        // private string tryGetPackageVersion(string line)
+        // {
+        //     int versionIndex = line.IndexOf("Version=") + "Version=".Length;
 
-            string packageVersion = line.Substring(versionIndex);
-            packageVersion = packageVersion.Replace("\"", "");
-            packageVersion = packageVersion.Replace("/>", "").Trim();
-            return packageVersion;
-        }
+        //     string packageVersion = line.Substring(versionIndex);
+        //     packageVersion = packageVersion.Replace("\"", "");
+        //     packageVersion = packageVersion.Replace("/>", "").Trim();
+        //     return packageVersion;
+        // }
 
         #endregion
 
