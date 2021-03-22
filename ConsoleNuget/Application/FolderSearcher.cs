@@ -38,6 +38,8 @@ namespace Application
                 return;
             var stepSearch = ConsoleMethods.Confirm("Do you wish to search each project invidually?");
             await this.ProcessFiles(files, stepSearch);
+
+            //now pass files over to run nuget processing
         }
 
         /// <summary>
@@ -52,12 +54,23 @@ namespace Application
                 var result = await TryProcessFile(filePath);
                 _projects.Add(result);
 
-                if (stepSearch)
-                {
-                    _outputProvider($"Scan next file press any key");
-                    var response = _inputProvider() ?? string.Empty;
-                }
+                CheckStagedSearchAndWaitIfNeeded(stepSearch);
             }
+        }
+
+        /// <summary>
+        /// check if the user asked to process through each project individually and wait if required!
+        /// </summary>
+        /// <param name="stepSearch"></param>
+        private void CheckStagedSearchAndWaitIfNeeded(bool stepSearch)
+        {
+            if (stepSearch)
+            {
+                _outputProvider($"Scan next file press any key");
+                var response = _inputProvider() ?? string.Empty;
+                return;
+            }
+            return;
         }
 
         /// <summary>

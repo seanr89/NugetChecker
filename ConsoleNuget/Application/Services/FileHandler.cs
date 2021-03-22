@@ -24,8 +24,7 @@ namespace Application.Services
             _logger.LogInformation("ReadFileAndProcessContents");
             //Now split the file up into its individual lines
 
-            var project = new ProjectDetails();
-            project.Path = filePath;
+            var project = new ProjectDetails(filePath);
 
             string[] lines = await File.ReadAllLinesAsync(filePath);
 
