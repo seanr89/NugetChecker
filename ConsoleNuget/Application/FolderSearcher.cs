@@ -16,6 +16,7 @@ namespace Application
         private readonly Action<string> _outputProvider;
         private readonly IFileHandler _filehandler;
         private readonly List<ProjectDetails> _projects;
+        private readonly IProjectManager _projectManager;
 
         public FolderSearcher(ILogger<FolderSearcher> logger, IFileHandler fileHandler)
         {
@@ -36,6 +37,7 @@ namespace Application
 
             if (!files.Any())
                 return;
+
             var stepSearch = ConsoleMethods.Confirm("Do you wish to search each project invidually?");
             await this.ProcessFiles(files, stepSearch);
 

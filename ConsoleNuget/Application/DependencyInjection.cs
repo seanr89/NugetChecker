@@ -10,6 +10,7 @@ namespace Application
             services.AddTransient<FolderSearcher>();
             services.AddTransient<IFileHandler, FileHandler>();
             services.AddTransient<LineReader>();
+            services.AddTransient<IProjectManager, ProjectManager>();
             return services;
         }
     }
