@@ -1,6 +1,7 @@
 using Application.Interfaces;
 using Application.Services;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
 namespace Application
 {
     public static class DependencyInjection
@@ -9,7 +10,11 @@ namespace Application
         {
             services.AddTransient<FolderSearcher>();
             services.AddTransient<IFileHandler, FileHandler>();
+            services.AddTransient<INugetService, NugetService>();
             services.AddTransient<LineReader>();
+
+            //Add http client services at ConfigureServices(IServiceCollection services)
+            services.AddHttpClient<INugetService, NugetService>();
             return services;
         }
     }

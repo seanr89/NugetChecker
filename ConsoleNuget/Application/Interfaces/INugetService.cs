@@ -1,9 +1,10 @@
 using System.Threading.Tasks;
+using Domain;
 
 namespace Application.Interfaces
 {
     public interface INugetService
     {
-        Task<bool> queryPackageByName(string packageName);
+        Task queryPackagesForProject(ProjectDetails proj);
     }
 }

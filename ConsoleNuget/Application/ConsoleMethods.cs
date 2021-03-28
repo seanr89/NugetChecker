@@ -9,7 +9,7 @@ namespace Application
     public static class ConsoleMethods
     {
         /// <summary>
-        /// Test method to handle Yes/No selection on console apps
+        /// Provides console commands to handle Yes/No selection on console apps
         /// </summary>
         /// <param name="title">The text to display on the read message</param>
         /// <returns></returns>
@@ -29,6 +29,9 @@ namespace Application
             return (response == ConsoleKey.Y);
         }
 
+        /// <summary>
+        /// Provides logic to monitor and read for ctrl+c events to close the app
+        /// </summary>
         public static void EnableCloseOnCtrlC()
         {
             //Handle cancellation/closure events
@@ -38,7 +41,6 @@ namespace Application
                 a.Cancel = true;
                 cts.Cancel();
                 Console.WriteLine("EnableCloseOnCtrlC");
-                //await connection.InvokeAsync("sendMessage", "ConsoleClient", $"{_userName} has left");
                 Environment.Exit(0);
             };
         }

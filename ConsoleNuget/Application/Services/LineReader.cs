@@ -38,7 +38,7 @@ namespace Application.Services
         /// Query the content of a project framework version
         /// </summary>
         /// <param name="line"></param>
-        /// <returns></returns>
+        /// <returns>breakdown of the line content for a targetline record</returns>
         public string checkAndProcessTargetFramework(string line)
         {
             int pFrom = line.IndexOf(">") + ">".Length;

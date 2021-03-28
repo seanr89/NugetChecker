@@ -9,21 +9,28 @@ using Microsoft.Extensions.Logging;
 
 namespace Application
 {
+    /// <summary>
+    /// Open provided project folder to then process the csproj files and prep for processing!
+    /// </summary>
     public class FolderSearcher
     {
         private readonly ILogger<FolderSearcher> _logger;
         private readonly Func<string> _inputProvider;
         private readonly Action<string> _outputProvider;
+
         private readonly IFileHandler _filehandler;
+        private readonly INugetService _nugetService;
         private readonly List<ProjectDetails> _projects;
 
-        public FolderSearcher(ILogger<FolderSearcher> logger, IFileHandler fileHandler)
+        public FolderSearcher(ILogger<FolderSearcher> logger, IFileHandler fileHandler, INugetService nugetService)
         {
             _logger = logger;
             _filehandler = fileHandler;
+            _nugetService = nugetService;
             _inputProvider = Console.ReadLine;
             _outputProvider = Console.WriteLine;
             _projects = new List<ProjectDetails>();
+
         }
 
         public async Task Run(string folderPath)
@@ -38,6 +45,17 @@ namespace Application
                 return;
             var stepSearch = ConsoleMethods.Confirm("Do you wish to search each project invidually?");
             await this.ProcessFiles(files, stepSearch);
+
+            await BeginPackageChecks(_projects);
+        }
+
+        private async Task BeginPackageChecks(List<ProjectDetails> projects)
+        {
+            _logger.LogInformation("FolderSearcher:BeginPackageChecks");
+            foreach (var proj in projects)
+            {
+                await _nugetService.queryPackagesForProject(proj);
+            }
         }
 
         /// <summary>
