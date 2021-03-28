@@ -7,5 +7,10 @@ namespace Domain
         public string Name { get; set; }
         public string Framework { get; set; }
         public List<PackageInfo> Packages { get; set; } = new List<PackageInfo>();
+
+        public ProjectDetails(string path)
+        {
+            Path = path;
+        }
     }
 }

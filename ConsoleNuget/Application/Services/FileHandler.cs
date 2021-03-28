@@ -22,11 +22,7 @@ namespace Application.Services
         public async Task<ProjectDetails> ReadFileAndProcessContents(string filePath)
         {
             _logger.LogInformation("ReadFileAndProcessContents");
-            //Now split the file up into its individual lines
-
-            var project = new ProjectDetails();
-            project.Path = filePath;
-
+            var project = new ProjectDetails(filePath);
             string[] lines = await File.ReadAllLinesAsync(filePath);
 
             project.Name = GetProjectNameFromPath(filePath);
@@ -72,6 +68,7 @@ namespace Application.Services
         {
             foreach (string lineRecord in lines)
             {
+                //TODO: move if perhaps??
                 if (lineRecord.Contains("TargetFramework"))
                 {
                     project.Framework = _lineReader.checkAndProcessTargetFramework(lineRecord);
@@ -97,9 +94,13 @@ namespace Application.Services
             return res;
         }
 
+        /// <summary>
+        /// TODO: provide summary
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         private int getFilePathSlashIndex(string filePath)
         {
-            //TODO: follow open/closed and try and get rid of the else!
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 // Do something
