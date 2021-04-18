@@ -30,16 +30,15 @@ namespace Application
             _nugetService = nugetService;
             _inputProvider = Console.ReadLine;
             _outputProvider = Console.WriteLine;
-            _projects = new List<ProjectDetails>();
-
+            _projects = new List<ProjectDetails>(); //TODO: remove this!
         }
 
         public async Task Run(string folderPath)
         {
-            _outputProvider($"Run : {folderPath}");
+            _outputProvider($"FolderSearch::Run > {folderPath}");
             //_logger.LogInformation("FolderSearcher:Run");
+            //Console.WriteLine($"Folder to search: {folderPath} - Searching");
 
-            Console.WriteLine($"Folder to search: {folderPath} - Searching");
             string[] files = Directory.GetFiles(folderPath, "*.csproj", SearchOption.AllDirectories);
 
             if (!files.Any())
@@ -47,7 +46,6 @@ namespace Application
 
             var stepSearch = ConsoleMethods.Confirm("Do you wish to search each project invidually?");
             await this.ProcessFiles(files, stepSearch);
-
             await BeginPackageChecks(_projects);
         }
 
