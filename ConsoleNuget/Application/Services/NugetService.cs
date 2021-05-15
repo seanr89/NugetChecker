@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Application.Interfaces;
@@ -19,26 +20,31 @@ namespace Application.Services
 
         public Task queryNugetForPackage(PackageInfo pack)
         {
-            throw new System.NotImplementedException();
+            foreach (var pack in proj.Packages)
+            {
+                var nugetValue = await queryIndividualPackageDetails(pack);
+                pack.Response = nugetValue;
+            }
         }
 
-        public async Task<NugetResponse> queryPackagesForProject(ProjectDetails proj)
+        [return: MaybeNull]
+        async Task<NugetResponse?> queryNugetForPackage(PackageInfo package)
         {
             try
             {
-                //var url = this._ServiceIndex += proj.Name;
-                HttpResponseMessage response = await _httpClient.GetAsync(_ServiceIndex + proj.Name);
+                var url = _ServiceIndex + package.Name;
+                HttpResponseMessage response = await _httpClient.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                 {
                     return null;
                 }
-                string urlContents = await response.Content.ReadAsStringAsync();
+                String urlContents = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<NugetResponse>(urlContents);
             }
             catch (Exception e)
             {
                 Console.WriteLine($"Generic Exception caught: {e.Message}");
-                return;
+                return null;
             }
         }
     }

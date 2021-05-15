@@ -39,7 +39,7 @@ namespace NugConsole
             try
             {
                 //Asynchronous method executed with Wait added to ensure that console request is not output too early
-                serviceProvider.GetService<FolderSearcher>().Run(folderPath);
+                serviceProvider.GetService<FolderSearcher>().Run(folderPath).Wait();
             }
             catch (NotImplementedException nie)
             {
