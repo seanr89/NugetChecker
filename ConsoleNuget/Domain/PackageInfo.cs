@@ -5,5 +5,6 @@ namespace Domain
         public string Name { get; set; }
 
         public string CurrentVersion { get; set; }
+        public NugetResponse Response { get; set; }
     }
 }

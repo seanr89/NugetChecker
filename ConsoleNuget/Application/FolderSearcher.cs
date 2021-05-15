@@ -21,13 +21,13 @@ namespace Application
         private readonly IFileHandler _filehandler;
         private readonly INugetService _nugetService;
         private readonly List<ProjectDetails> _projects;
-        private readonly IProjectManager _projectManager;
+        //private readonly IProjectManager _projectManager;
 
         public FolderSearcher(ILogger<FolderSearcher> logger, IFileHandler fileHandler, INugetService nugetService)
         {
-            _logger = logger;
-            _filehandler = fileHandler;
-            _nugetService = nugetService;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _filehandler = fileHandler ?? throw new ArgumentNullException(nameof(fileHandler));
+            _nugetService = nugetService ?? throw new ArgumentNullException(nameof(nugetService));
             _inputProvider = Console.ReadLine;
             _outputProvider = Console.WriteLine;
             _projects = new List<ProjectDetails>();
@@ -37,9 +37,8 @@ namespace Application
         public async Task Run(string folderPath)
         {
             _outputProvider($"Run : {folderPath}");
-            //_logger.LogInformation("FolderSearcher:Run");
 
-            Console.WriteLine($"Folder to search: {folderPath} - Searching");
+            //Console.WriteLine($"Folder to search: {folderPath} - Searching");
             string[] files = Directory.GetFiles(folderPath, "*.csproj", SearchOption.AllDirectories);
 
             if (!files.Any())
@@ -51,15 +50,6 @@ namespace Application
             await BeginPackageChecks(_projects);
         }
 
-        private async Task BeginPackageChecks(List<ProjectDetails> projects)
-        {
-            _logger.LogInformation("FolderSearcher:BeginPackageChecks");
-            foreach (var proj in projects)
-            {
-                await _nugetService.queryPackagesForProject(proj);
-            }
-        }
-
         /// <summary>
         /// Support the processing of all of each found file!
         /// </summary>
@@ -68,12 +58,22 @@ namespace Application
         {
             foreach (string filePath in files)
             {
-                _logger.LogInformation(filePath);
+                //_logger.LogInformation(filePath);
                 var result = await TryProcessFile(filePath);
                 _projects.Add(result);
 
                 CheckStagedSearchAndWaitIfNeeded(stepSearch);
             }
+        }
+
+        /// <summary>
+        /// Executes the reading/parsing handling of the file details!
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        private async Task<ProjectDetails> TryProcessFile(string filePath)
+        {
+            return await _filehandler.ReadFileAndProcessContents(filePath);
         }
 
         /// <summary>
@@ -91,14 +91,13 @@ namespace Application
             return;
         }
 
-        /// <summary>
-        /// Executes the reading/parsing handling of the file details!
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        private async Task<ProjectDetails> TryProcessFile(string filePath)
+        private async Task BeginPackageChecks(List<ProjectDetails> projects)
         {
-            return await _filehandler.ReadFileAndProcessContents(filePath);
+            _logger.LogInformation("FolderSearcher:BeginPackageChecks");
+            foreach (var proj in projects)
+            {
+                await _nugetService.queryPackagesForProject(proj);
+            }
         }
     }
 }

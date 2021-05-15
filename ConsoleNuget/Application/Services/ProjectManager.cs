@@ -1,4 +1,5 @@
 
+using System;
 using System.Threading.Tasks;
 using Application.Interfaces;
 using Domain;
@@ -14,7 +15,7 @@ namespace Application
 
         public async Task ProcessProjectDetails(ProjectDetails proj)
         {
-
+            throw new NotImplementedException();
         }
     }
 }
