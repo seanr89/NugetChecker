@@ -9,5 +9,10 @@ namespace Domain
 
         public string CurrentVersion { get; set; }
         public NugetResponse Response { get; set; }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

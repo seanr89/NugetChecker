@@ -30,7 +30,7 @@ namespace Application.Services
         [return: MaybeNull]
         public async Task<NugetResponse?> queryIndividualPackageDetails(PackageInfo package)
         {
-            Console.WriteLine("queryIndividualPackageDetails");
+            //Console.WriteLine("queryIndividualPackageDetails");
             try
             {
                 var url = _ServiceIndex + package.Name;

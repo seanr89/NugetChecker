@@ -27,7 +27,7 @@ namespace Application.Services
 
             project.Name = GetProjectNameFromPath(filePath);
             TryGetProjectTargetFramework(lines, project);
-            ProcessProjectReferences(lines, project);
+            project = ProcessProjectReferences(lines, project);
             return project;
         }
 
@@ -49,15 +49,18 @@ namespace Application.Services
         /// </summary>
         /// <param name="lines"></param>
         /// <param name="proj"></param>
-        private void ProcessProjectReferences(string[] lines, ProjectDetails proj)
+        private ProjectDetails ProcessProjectReferences(string[] lines, ProjectDetails proj)
         {
             if (!lines.Any())
-                return;
+                return proj;
 
             foreach (string lineRec in lines)
             {
-                proj.Packages.Add(FindAndParsePackageReference(lineRec));
+                var pack = FindAndParsePackageReference(lineRec);
+                if (pack != null)
+                    proj.Packages.Add(pack);
             }
+            return proj;
         }
 
         /// <summary>

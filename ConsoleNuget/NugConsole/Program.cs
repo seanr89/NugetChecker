@@ -86,7 +86,7 @@ namespace NugConsole
             {
                 logging.AddConsole();
             }).Configure<LoggerFilterOptions>(options => options.MinLevel =
-                                                LogLevel.Trace);
+                                                LogLevel.Information);
             services.AddApplication();
 
         }
