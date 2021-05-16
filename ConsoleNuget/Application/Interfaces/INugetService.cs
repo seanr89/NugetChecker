@@ -7,6 +7,6 @@ namespace Application.Interfaces
     {
         Task queryPackagesForProject(ProjectDetails proj);
 
-        Task<NugetResponse?> queryNugetForPackage(PackageInfo pack);
+        Task<NugetResponse?> queryIndividualPackageDetails(PackageInfo package);
     }
 }

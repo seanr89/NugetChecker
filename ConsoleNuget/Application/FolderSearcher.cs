@@ -43,7 +43,7 @@ namespace Application
             if (!files.Any())
                 return;
 
-            var stepSearch = ConsoleMethods.Confirm("Do you wish to search each project invidually?");
+            var stepSearch = false; //ConsoleMethods.Confirm("Do you wish to search each project invidually?");
             await this.ProcessFiles(files, stepSearch);
             await BeginPackageChecks(_projects);
         }
@@ -95,6 +95,30 @@ namespace Application
             foreach (var proj in projects)
             {
                 await _nugetService.queryPackagesForProject(proj);
+                ReviewProjectPackagesForUpdatesAvailable(proj);
+            }
+        }
+
+        private void ReviewProjectPackagesForUpdatesAvailable(ProjectDetails project, bool update = false)
+        {
+            _outputProvider($"FolderSearcher:ReviewProjectPackagesForUpdatesAvailable");
+            foreach (var pack in project.Packages)
+            {
+                if (pack.Response != null)
+                {
+                    var latestPackage = pack.Response.data[0];
+                    if (pack.CurrentVersion != latestPackage.Version)
+                    {
+                        //package is not on latest version!
+                        Console.WriteLine($"Package: {pack.Name} can be updated to version : {latestPackage.Version}");
+                        if (update)
+                        {
+                            // bool updated = updater.TryExecuteCmd(package.Name, latestPackage.Version, project.Path);
+                            // if (updated)
+                            //     Console.WriteLine($"Updated package {package.Name}");
+                        }
+                    }
+                }
             }
         }
     }

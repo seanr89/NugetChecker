@@ -18,7 +18,7 @@ namespace Application.Services
             _httpClient = httpClient;
         }
 
-        public Task queryNugetForPackage(PackageInfo pack)
+        public async Task queryPackagesForProject(ProjectDetails proj)
         {
             foreach (var pack in proj.Packages)
             {
@@ -28,8 +28,9 @@ namespace Application.Services
         }
 
         [return: MaybeNull]
-        async Task<NugetResponse?> queryNugetForPackage(PackageInfo package)
+        public async Task<NugetResponse?> queryIndividualPackageDetails(PackageInfo package)
         {
+            Console.WriteLine("queryIndividualPackageDetails");
             try
             {
                 var url = _ServiceIndex + package.Name;

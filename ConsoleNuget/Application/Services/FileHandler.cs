@@ -27,6 +27,7 @@ namespace Application.Services
 
             project.Name = GetProjectNameFromPath(filePath);
             TryGetProjectTargetFramework(lines, project);
+            ProcessProjectReferences(lines, project);
             return project;
         }
 
@@ -55,7 +56,7 @@ namespace Application.Services
 
             foreach (string lineRec in lines)
             {
-                FindAndParsePackageReference(lineRec);
+                proj.Packages.Add(FindAndParsePackageReference(lineRec));
             }
         }
 
@@ -68,7 +69,6 @@ namespace Application.Services
         {
             foreach (string lineRecord in lines)
             {
-                //TODO: move if perhaps??
                 if (lineRecord.Contains("TargetFramework"))
                 {
                     project.Framework = _lineReader.checkAndProcessTargetFramework(lineRecord);
@@ -87,6 +87,7 @@ namespace Application.Services
             PackageInfo res = null;
             if (line.TrimStart().StartsWith("<PackageReference"))
             {
+                res = new PackageInfo();
                 res.Name = _lineReader.tryGetPackageName(line);
                 //Version - to be tidied up
                 res.CurrentVersion = _lineReader.tryGetPackageVersion(line);
