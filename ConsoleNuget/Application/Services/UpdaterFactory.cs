@@ -1,3 +1,6 @@
+using System;
+using Application.Interfaces;
+
 namespace Application.Services
 {
     public class UpdaterFactory
@@ -5,6 +8,11 @@ namespace Application.Services
         public UpdaterFactory()
         {
 
+        }
+
+        public IUpdater GetUpdaterByOS()
+        {
+            throw new NotImplementedException();
         }
     }
 }

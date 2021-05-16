@@ -16,6 +16,7 @@ namespace Application
             //Add http client services at ConfigureServices(IServiceCollection services)
             services.AddHttpClient<INugetService, NugetService>();
             services.AddTransient<IProjectManager, ProjectManager>();
+            services.AddTransient<UpdaterFactory>();
             return services;
         }
     }
