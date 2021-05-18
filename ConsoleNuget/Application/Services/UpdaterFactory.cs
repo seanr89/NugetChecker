@@ -1,5 +1,7 @@
 using System;
+using System.Runtime.InteropServices;
 using Application.Interfaces;
+using Application.Services.Updaters;
 
 namespace Application.Services
 {
@@ -10,9 +12,16 @@ namespace Application.Services
 
         }
 
-        public IUpdater GetUpdaterByOS()
+        public IUpdater GetUpdater()
         {
-            throw new NotImplementedException();
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return new CmdUpdater();
+            }
+            else
+            {
+                return new BashUpdater();
+            }
         }
     }
 }

@@ -61,16 +61,6 @@ namespace Application.Services.Updaters
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        private string TrimPathToFolderOnly(string path)
-        {
-            return path.Substring(0, path.LastIndexOf("\\"));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="package"></param>
         /// <param name="version"></param>
         /// <returns></returns>

@@ -8,7 +8,6 @@ namespace Application.Services.Updaters
     {
         public bool TryExecuteCmd(string packageName, string packageVersion, string folderPath)
         {
-            throw new System.NotImplementedException();
             Console.WriteLine($"CmdExecutor: TryExecuteCmd {packageName} and version: {packageVersion}");
             try
             {
@@ -30,7 +29,6 @@ namespace Application.Services.Updaters
                 Process.WaitForInputIdle();
                 //Added a step to wait for an exit
                 Process.WaitForExit(timeOut);
-
                 return true;
             }
             catch (InvalidOperationException ie)
