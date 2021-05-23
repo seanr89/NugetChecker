@@ -99,6 +99,7 @@ namespace Application
         {
             _outputProvider($"FolderSearcher:ReviewProjectPackagesForUpdatesAvailable");
             var updater = _updaterFactory.GetUpdater();
+            bool packagesUpdated = false;
             foreach (var pack in project.Packages)
             {
                 if (pack.Response != null)
@@ -112,13 +113,17 @@ namespace Application
                         {
                             bool updated = updater.TryExecuteCmd(pack.Name, latestPackage.Version, project.Path);
                             if (updated)
+                            {
+                                packagesUpdated = true;
                                 _outputProvider($"Updated package {pack.Name}");
+                            }
+
                         }
                     }
                 }
             }
-
-            updater.TryRestorePackages(project.Path);
+            if (update && packagesUpdated)
+                updater.TryRestorePackages(project.Path);
         }
     }
 }
