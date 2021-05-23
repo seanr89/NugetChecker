@@ -7,11 +7,6 @@ namespace Application.Services
 {
     public class UpdaterFactory
     {
-        public UpdaterFactory()
-        {
-
-        }
-
         public IUpdater GetUpdater()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

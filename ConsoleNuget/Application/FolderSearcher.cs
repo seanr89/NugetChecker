@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Interfaces;
+using Application.Services;
 using Domain;
 using Microsoft.Extensions.Logging;
 
@@ -21,63 +22,56 @@ namespace Application
         private readonly IFileHandler _filehandler;
         private readonly INugetService _nugetService;
         private readonly List<ProjectDetails> _projects;
-        //private readonly IProjectManager _projectManager;
+        private readonly UpdaterFactory _updaterFactory;
 
-        public FolderSearcher(ILogger<FolderSearcher> logger, IFileHandler fileHandler, INugetService nugetService)
+        public FolderSearcher(ILogger<FolderSearcher> logger, IFileHandler fileHandler
+            , INugetService nugetService, UpdaterFactory updaterFactory)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _filehandler = fileHandler ?? throw new ArgumentNullException(nameof(fileHandler));
             _nugetService = nugetService ?? throw new ArgumentNullException(nameof(nugetService));
+            _updaterFactory = updaterFactory;
             _inputProvider = Console.ReadLine;
             _outputProvider = Console.WriteLine;
-            _projects = new List<ProjectDetails>(); //TODO: remove this!
+            _projects = new List<ProjectDetails>();
         }
 
+        /// <summary>
+        /// Base method that is execute on startup
+        /// </summary>
+        /// <param name="folderPath">Base folder path to search for relevant csproj files!</param>
+        /// <returns></returns>
         public async Task Run(string folderPath)
         {
             _outputProvider($"Run : {folderPath}");
-
-            //Console.WriteLine($"Folder to search: {folderPath} - Searching");
             string[] files = Directory.GetFiles(folderPath, "*.csproj", SearchOption.AllDirectories);
 
             if (!files.Any())
                 return;
 
             var stepSearch = false; //ConsoleMethods.Confirm("Do you wish to search each project invidually?");
-            await this.ProcessFiles(files, stepSearch);
+            await this.ProcessCSProjFiles(files, stepSearch);
             await BeginPackageChecks(_projects);
         }
 
         /// <summary>
-        /// Support the processing of all of each found file!
+        /// Support the processing each found CSProj File for Data and Packages
         /// </summary>
-        /// <param name="files"></param>
-        private async Task ProcessFiles(string[] files, bool stepSearch)
+        /// <param name="files">array of filenames and paths!</param>
+        private async Task ProcessCSProjFiles(string[] files, bool stepSearch)
         {
             foreach (string filePath in files)
             {
-                //_logger.LogInformation(filePath);
-                var result = await TryProcessFile(filePath);
+                var result = await _filehandler.ReadFileAndProcessContents(filePath);
                 _projects.Add(result);
-
                 CheckStagedSearchAndWaitIfNeeded(stepSearch);
             }
         }
 
         /// <summary>
-        /// Executes the reading/parsing handling of the file details!
+        /// Checks to see if the user has requested a delay and if so requests the user continue through a console event!
         /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        private async Task<ProjectDetails> TryProcessFile(string filePath)
-        {
-            return await _filehandler.ReadFileAndProcessContents(filePath);
-        }
-
-        /// <summary>
-        /// check if the user asked to process through each project individually and wait if required!
-        /// </summary>
-        /// <param name="stepSearch"></param>
+        /// <param name="stepSearch">if the user has agreed or rejected to manually step through each</param>
         private void CheckStagedSearchAndWaitIfNeeded(bool stepSearch)
         {
             if (stepSearch)
@@ -102,6 +96,7 @@ namespace Application
         private void ReviewProjectPackagesForUpdatesAvailable(ProjectDetails project, bool update = false)
         {
             _outputProvider($"FolderSearcher:ReviewProjectPackagesForUpdatesAvailable");
+            var updater = _updaterFactory.GetUpdater();
             foreach (var pack in project.Packages)
             {
                 if (pack.Response != null)
@@ -110,12 +105,12 @@ namespace Application
                     if (pack.CurrentVersion != latestPackage.Version)
                     {
                         //package is not on latest version!
-                        Console.WriteLine($"Package: {pack.Name} can be updated to version : {latestPackage.Version}");
+                        _outputProvider($"Package: {pack.Name} can be updated to version : {latestPackage.Version}");
                         if (update)
                         {
-                            // bool updated = updater.TryExecuteCmd(package.Name, latestPackage.Version, project.Path);
-                            // if (updated)
-                            //     Console.WriteLine($"Updated package {package.Name}");
+                            bool updated = updater.TryExecuteCmd(pack.Name, latestPackage.Version, project.Path);
+                            if (updated)
+                                _outputProvider($"Updated package {pack.Name}");
                         }
                     }
                 }
