@@ -74,12 +74,11 @@ namespace Application
         /// <param name="stepSearch">if the user has agreed or rejected to manually step through each</param>
         private void CheckStagedSearchAndWaitIfNeeded(bool stepSearch)
         {
-            if (stepSearch)
-            {
-                _outputProvider($"Scan next file press any key");
-                var response = _inputProvider() ?? string.Empty;
+            if (!stepSearch)
                 return;
-            }
+
+            _outputProvider($"Scan next file press any key");
+            var response = _inputProvider() ?? string.Empty;
             return;
         }
 
@@ -100,30 +99,31 @@ namespace Application
             _outputProvider($"FolderSearcher:ReviewProjectPackagesForUpdatesAvailable");
             var updater = _updaterFactory.GetUpdater();
             bool packagesUpdated = false;
+
+            //FIXME: Needs to be re-factored! 
             foreach (var pack in project.Packages)
             {
-                if (pack.Response != null)
+                if (pack.Response != null && pack.CurrentVersion != pack.Response.data[0].Version)
                 {
-                    var latestPackage = pack.Response.data[0];
-                    if (pack.CurrentVersion != latestPackage.Version)
-                    {
-                        //package is not on latest version!
-                        _outputProvider($"Package: {pack.Name} can be updated to version : {latestPackage.Version}");
-                        if (update)
-                        {
-                            bool updated = updater.TryExecuteCmd(pack.Name, latestPackage.Version, project.Path);
-                            if (updated)
-                            {
-                                packagesUpdated = true;
-                                _outputProvider($"Updated package {pack.Name}");
-                            }
-
-                        }
-                    }
+                    _outputProvider($"Package: {pack.Name} can be updated to version : {pack.Response.data[0].Version}");
+                    if (update)
+                        packagesUpdated = RunUpdateOfPackage(project, updater, packagesUpdated, pack, pack.Response.data[0]);
                 }
             }
             if (update && packagesUpdated)
                 updater.TryRestorePackages(project.Path);
+        }
+
+        private bool RunUpdateOfPackage(ProjectDetails project, IUpdater updater,
+            bool packagesUpdated, PackageInfo pack, NugetPackageData latestPackage)
+        {
+            bool updated = updater.TryExecuteCmd(pack.Name, latestPackage.Version, project.Path);
+            if (updated)
+            {
+                packagesUpdated = true;
+                _outputProvider($"Updated package {pack.Name}");
+            }
+            return packagesUpdated;
         }
     }
 }
