@@ -5,5 +5,7 @@ namespace Application.Interfaces
         bool TryExecuteCmdTest();
 
         bool TryExecuteCmd(string packageName, string packageVersion, string folderPath);
+
+        bool TryRestorePackages(string folderPath);
     }
 }

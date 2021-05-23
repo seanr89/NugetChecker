@@ -82,6 +82,11 @@ namespace Application.Services.Updaters
             return cmd;
         }
 
+        public bool TryRestorePackages(string folderPath)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

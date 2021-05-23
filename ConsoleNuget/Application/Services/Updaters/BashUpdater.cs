@@ -58,6 +58,11 @@ namespace Application.Services.Updaters
             return true;
         }
 
+        public bool TryRestorePackages(string folderPath)
+        {
+            throw new NotImplementedException();
+        }
+
         #region private
 
         /// <summary>
