@@ -117,6 +117,8 @@ namespace Application
                     }
                 }
             }
+
+            updater.TryRestorePackages(project.Path);
         }
     }
 }

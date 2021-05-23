@@ -58,10 +58,55 @@ namespace Application.Services.Updaters
             return false;
         }
 
+
+
+        public bool TryRestorePackages(string folderPath)
+        {
+            //Console.WriteLine($"CmdExecutor: TryExecuteCmd {packageName} and version: {packageVersion}");
+            try
+            {
+                ProcessStartInfo ProcessInfo;
+                Process Process = new Process();
+                //Set a time-out value.
+                int timeOut = 500;
+                ProcessInfo = new ProcessStartInfo("cmd.exe", "dotnet restore & exit");
+                var path = TrimPathToFolderOnly(folderPath);
+                ProcessInfo.WorkingDirectory = TrimPathToFolderOnly(folderPath);
+                ProcessInfo.CreateNoWindow = true;
+                ProcessInfo.UseShellExecute = true;
+                Process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                //TODO - handle process response and potential cmd closure!
+                // Allows to raise event when the process is finished
+                Process.EnableRaisingEvents = true;
+                // Eventhandler wich fires when exited
+                Process.Exited += new EventHandler(restoreProcess_Exited);
+                Process.Start(ProcessInfo);
+                //Wait for the window to finish loading.
+                //Process.WaitForInputIdle();
+                // Process.WaitForExit();
+                // if (!Process.HasExited)
+                // {
+                //     int exitCode = Process.ExitCode;
+                //     Process.Close();
+                // }
+                return true;
+            }
+            catch (InvalidOperationException ie)
+            {
+                Console.WriteLine($"CmdExecutor InvalidOperationException {ie.Message}");
+                return false;
+            }
+            catch
+            {
+                Console.WriteLine($"CmdExecutor UnHandledException");
+                return false;
+            }
+        }
+
         #region private
 
         /// <summary>
-        /// 
+        /// Support a quick / trimming step
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -71,7 +116,7 @@ namespace Application.Services.Updaters
         }
 
         /// <summary>
-        /// 
+        /// Create the dotnet add command that will update the package!
         /// </summary>
         /// <param name="package"></param>
         /// <param name="version"></param>
@@ -82,9 +127,13 @@ namespace Application.Services.Updaters
             return cmd;
         }
 
-        public bool TryRestorePackages(string folderPath)
+        #endregion
+
+        #region Events
+
+        private void restoreProcess_Exited(object sender, System.EventArgs e)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("restoreProcess_Exited");
         }
 
         #endregion
