@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -13,6 +14,8 @@ namespace Application.Services
         private readonly HttpClient _httpClient;
         //Basic nuget search URL
         private const string _ServiceIndex = "https://azuresearch-usnc.nuget.org/query?q=packageid:";
+        // private readonly List<NugetSource> _nugetSources;
+
         public NugetService(HttpClient httpClient)
         {
             _httpClient = httpClient;

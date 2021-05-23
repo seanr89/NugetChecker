@@ -90,7 +90,8 @@ namespace Application
             {
                 await _nugetService.queryPackagesForProject(proj);
                 //TODO: we could include a question here to ask user if they want to update!
-                ReviewProjectPackagesForUpdatesAvailable(proj, true);
+                if (proj.Packages.Any())
+                    ReviewProjectPackagesForUpdatesAvailable(proj, true);
             }
         }
 
