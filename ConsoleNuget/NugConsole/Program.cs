@@ -11,8 +11,7 @@ namespace NugConsole
 {
     class Program
     {
-        private static IConfigurationRoot Configuration { get; set; }
-        private static string env { get; set; }
+        private static IConfigurationRoot? Configuration { get; set; }
         static void Main(string[] args)
         {
             Console.WriteLine("Console Nuget!\r");

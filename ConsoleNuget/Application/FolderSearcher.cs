@@ -30,7 +30,7 @@ namespace Application
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _filehandler = fileHandler ?? throw new ArgumentNullException(nameof(fileHandler));
             _nugetService = nugetService ?? throw new ArgumentNullException(nameof(nugetService));
-            _updaterFactory = updaterFactory;
+            _updaterFactory = updaterFactory ?? throw new ArgumentNullException(nameof(updaterFactory));
             _inputProvider = Console.ReadLine;
             _outputProvider = Console.WriteLine;
             _projects = new List<ProjectDetails>();
@@ -89,7 +89,8 @@ namespace Application
             foreach (var proj in projects)
             {
                 await _nugetService.queryPackagesForProject(proj);
-                ReviewProjectPackagesForUpdatesAvailable(proj);
+                //TODO: we could include a question here to ask user if they want to update!
+                ReviewProjectPackagesForUpdatesAvailable(proj, true);
             }
         }
 

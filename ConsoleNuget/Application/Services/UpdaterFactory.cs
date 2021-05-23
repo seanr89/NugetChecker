@@ -5,6 +5,9 @@ using Application.Services.Updaters;
 
 namespace Application.Services
 {
+    /// <summary>
+    /// Factory class to support Updater Selection based on OS version!
+    /// </summary>
     public class UpdaterFactory
     {
         public IUpdater GetUpdater()

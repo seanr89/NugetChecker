@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace Domain
 {
+#nullable enable
     public class NugetResponse
     {
         //public int totalHits { get; set; }

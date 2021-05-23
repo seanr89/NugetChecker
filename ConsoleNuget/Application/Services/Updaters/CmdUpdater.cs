@@ -33,11 +33,12 @@ namespace Application.Services.Updaters
             }
             catch (InvalidOperationException ie)
             {
+                Console.WriteLine($"CmdExecutor InvalidOperationException {ie.Message}");
                 return false;
             }
             catch
             {
-                //some exeception has been caught
+                Console.WriteLine($"CmdExecutor UnHandledException");
                 return false;
             }
         }

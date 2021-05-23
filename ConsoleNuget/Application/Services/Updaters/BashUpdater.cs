@@ -9,7 +9,7 @@ namespace Application.Services.Updaters
     {
         public bool TryExecuteCmd(string packageName, string packageVersion, string folderPath)
         {
-            Console.WriteLine($"MacExecutor: TryExecuteCmd {packageName} and version: {packageVersion}");
+            Console.WriteLine($"BashExecutor: TryExecuteCmd {packageName} and version: {packageVersion}");
             try
             {
                 string command = CreatePackageCommand(packageName, packageVersion);
@@ -28,18 +28,20 @@ namespace Application.Services.Updaters
             }
             catch (InvalidOperationException ie)
             {
+                Console.WriteLine($"BashExecutor InvalidOperationException {ie.Message}");
                 return false;
             }
             catch
             {
-                //some exeception has been caught
+                Console.WriteLine($"BashExecutor UnHandledException");
+                //some exception has been caught
                 return false;
             }
         }
 
         public bool TryExecuteCmdTest()
         {
-            Console.WriteLine("MacExecutor: TryExecuteCmd");
+            Console.WriteLine("BashExecutor: TryExecuteCmd");
             string command = "dotnet --version";
             Process proc = new System.Diagnostics.Process();
             proc.StartInfo.FileName = @"/bin/bash";

@@ -85,7 +85,7 @@ namespace Application.Services
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
-        private PackageInfo FindAndParsePackageReference(string line)
+        private PackageInfo? FindAndParsePackageReference(string line)
         {
             PackageInfo res = null;
             if (line.TrimStart().StartsWith("<PackageReference"))
