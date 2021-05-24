@@ -33,21 +33,24 @@ namespace Application.Services
         [return: MaybeNull]
         public async Task<NugetResponse?> queryIndividualPackageDetails(PackageInfo package)
         {
-            //Console.WriteLine("queryIndividualPackageDetails");
             try
             {
                 var url = _ServiceIndex + package.Name;
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                 {
+                    //TODO: Check for authentication or connection issues here too!
                     return null;
                 }
-                String urlContents = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<NugetResponse>(urlContents);
+                else
+                {
+                    String urlContents = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<NugetResponse>(urlContents);
+                }
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Generic Exception caught: {e.Message}");
+                Console.WriteLine($"NugetService Exception caught: {e.Message}");
                 return null;
             }
         }

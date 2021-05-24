@@ -96,7 +96,7 @@ namespace Application
 
         private void ReviewProjectPackagesForUpdatesAvailable(ProjectDetails project, bool update = false)
         {
-            _outputProvider($"FolderSearcher:ReviewProjectPackagesForUpdatesAvailable");
+            //_outputProvider($"FolderSearcher:ReviewProjectPackagesForUpdatesAvailable");
             var updater = _updaterFactory.GetUpdater();
             bool packagesUpdated = false;
 
@@ -114,6 +114,15 @@ namespace Application
                 updater.TryRestorePackages(project.Path);
         }
 
+        /// <summary>
+        /// Execute the updating process through the provided updater!
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="updater"></param>
+        /// <param name="packagesUpdated"></param>
+        /// <param name="pack"></param>
+        /// <param name="latestPackage"></param>
+        /// <returns></returns>
         private bool RunUpdateOfPackage(ProjectDetails project, IUpdater updater,
             bool packagesUpdated, PackageInfo pack, NugetPackageData latestPackage)
         {

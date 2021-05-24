@@ -39,25 +39,6 @@ namespace Application.Services.Updaters
             }
         }
 
-        public bool TryExecuteCmdTest()
-        {
-            Console.WriteLine("BashExecutor: TryExecuteCmd");
-            string command = "dotnet --version";
-            Process proc = new System.Diagnostics.Process();
-            proc.StartInfo.FileName = @"/bin/bash";
-            proc.StartInfo.Arguments = "-c \" " + command + " \"";
-            proc.StartInfo.UseShellExecute = false;
-            proc.StartInfo.RedirectStandardOutput = true;
-            proc.Start();
-
-            while (!proc.StandardOutput.EndOfStream)
-            {
-                Console.WriteLine(proc.StandardOutput.ReadLine());
-            }
-
-            return true;
-        }
-
         public bool TryRestorePackages(string folderPath)
         {
             try
@@ -105,9 +86,9 @@ namespace Application.Services.Updaters
         }
 
         /// <summary>
-        /// 
+        /// implement simple dotnet restore command
         /// </summary>
-        /// <returns></returns>
+        /// <returns>bash command</returns>
         private string CreateRestoreCommand()
         {
             string cmd = $"dotnet restore & exit";

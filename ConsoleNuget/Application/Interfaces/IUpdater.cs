@@ -2,7 +2,7 @@ namespace Application.Interfaces
 {
     public interface IUpdater
     {
-        bool TryExecuteCmdTest();
+        //bool TryExecuteCmdTest();
 
         bool TryExecuteCmd(string packageName, string packageVersion, string folderPath);
 

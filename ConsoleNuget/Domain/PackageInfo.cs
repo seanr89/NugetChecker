@@ -16,6 +16,12 @@ namespace Domain
         /// <value></value>
         public string CurrentVersion { get; set; }
         public NugetResponse Response { get; set; }
+        /// <summary>
+        /// Flag to to denote if the package was updated or not!
+        /// 
+        /// </summary>
+        /// <value></value>
+        public bool Updated { get; set; } = false;
 
         /// <summary>
         /// TODO: rework to support easier logging/outputting of relevant data!

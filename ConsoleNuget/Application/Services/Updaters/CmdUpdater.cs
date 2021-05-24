@@ -44,23 +44,6 @@ namespace Application.Services.Updaters
             }
         }
 
-        public bool TryExecuteCmdTest()
-        {
-            Console.WriteLine("CmdExecutor: TryExecuteCmd");
-            ProcessStartInfo ProcessInfo;
-            Process Process;
-
-            string command = "dotnet --version";
-            ProcessInfo = new ProcessStartInfo("cmd.exe", "/K " + command);
-            ProcessInfo.CreateNoWindow = false;
-            ProcessInfo.UseShellExecute = true;
-            Process = Process.Start(ProcessInfo);
-
-            return false;
-        }
-
-
-
         public bool TryRestorePackages(string folderPath)
         {
             //Console.WriteLine($"CmdExecutor: TryExecuteCmd {packageName} and version: {packageVersion}");
@@ -83,16 +66,11 @@ namespace Application.Services.Updaters
                     // Allows to raise event when the process is finished
                     Process.EnableRaisingEvents = true;
                     // Eventhandler wich fires when exited
-                    Process.Exited += new EventHandler(restoreProcess_Exited);
+                    //Process.Exited += new EventHandler(restoreProcess_Exited);
                     var pro = Process.Start(ProcessInfo);
                     //Wait for the window to finish loading.
                     //pro.WaitForInputIdle();
-                    pro.WaitForExit(2000);
-                    // if (!Process.HasExited)
-                    // {
-                    //     int exitCode = Process.ExitCode;
-                    //     Process.Close();
-                    // }
+                    pro.WaitForExit(5000);
                     return true;
                 }
             }
@@ -134,18 +112,18 @@ namespace Application.Services.Updaters
 
         #endregion
 
-        #region Events
+        // #region Events
 
-        private void restoreProcess_Exited(object sender, System.EventArgs e)
-        {
-            Console.WriteLine("restoreProcess_Exited");
-        }
+        // private void restoreProcess_Exited(object sender, System.EventArgs e)
+        // {
+        //     Console.WriteLine("restoreProcess_Exited");
+        // }
 
-        private static Task<bool> WaitForExitAsync(Process process, int timeout)
-        {
-            return Task.Run(() => process.WaitForExit(timeout));
-        }
+        // private static Task<bool> WaitForExitAsync(Process process, int timeout)
+        // {
+        //     return Task.Run(() => process.WaitForExit(timeout));
+        // }
 
-        #endregion
+        // #endregion
     }
 }
