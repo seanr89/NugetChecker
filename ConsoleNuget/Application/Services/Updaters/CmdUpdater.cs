@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Application.Interfaces;
 
 namespace Application.Services.Updaters
@@ -65,40 +66,44 @@ namespace Application.Services.Updaters
             //Console.WriteLine($"CmdExecutor: TryExecuteCmd {packageName} and version: {packageVersion}");
             try
             {
-                ProcessStartInfo ProcessInfo;
-                Process Process = new Process();
-                //Set a time-out value.
-                int timeOut = 500;
-                ProcessInfo = new ProcessStartInfo("cmd.exe", "dotnet restore & exit");
-                var path = TrimPathToFolderOnly(folderPath);
-                ProcessInfo.WorkingDirectory = TrimPathToFolderOnly(folderPath);
-                ProcessInfo.CreateNoWindow = true;
-                ProcessInfo.UseShellExecute = true;
-                Process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                //TODO - handle process response and potential cmd closure!
-                // Allows to raise event when the process is finished
-                Process.EnableRaisingEvents = true;
-                // Eventhandler wich fires when exited
-                Process.Exited += new EventHandler(restoreProcess_Exited);
-                Process.Start(ProcessInfo);
-                //Wait for the window to finish loading.
-                //Process.WaitForInputIdle();
-                // Process.WaitForExit();
-                // if (!Process.HasExited)
-                // {
-                //     int exitCode = Process.ExitCode;
-                //     Process.Close();
-                // }
-                return true;
+                using (Process Process = new Process())
+                {
+                    ProcessStartInfo ProcessInfo;
+                    //Set a time-out value.
+                    ProcessInfo = new ProcessStartInfo("cmd.exe", "/K " + "dotnet restore & exit");
+                    var path = TrimPathToFolderOnly(folderPath);
+                    ProcessInfo.WorkingDirectory = TrimPathToFolderOnly(folderPath);
+                    ProcessInfo.CreateNoWindow = true;
+                    ProcessInfo.UseShellExecute = true;
+                    Process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    Process.StartInfo.RedirectStandardInput = true;
+                    Process.StartInfo.RedirectStandardOutput = true;
+                    Process.StartInfo.RedirectStandardError = true;
+                    //TODO - handle process response and potential cmd closure!
+                    // Allows to raise event when the process is finished
+                    Process.EnableRaisingEvents = true;
+                    // Eventhandler wich fires when exited
+                    Process.Exited += new EventHandler(restoreProcess_Exited);
+                    var pro = Process.Start(ProcessInfo);
+                    //Wait for the window to finish loading.
+                    //pro.WaitForInputIdle();
+                    pro.WaitForExit(2000);
+                    // if (!Process.HasExited)
+                    // {
+                    //     int exitCode = Process.ExitCode;
+                    //     Process.Close();
+                    // }
+                    return true;
+                }
             }
             catch (InvalidOperationException ie)
             {
-                Console.WriteLine($"CmdExecutor InvalidOperationException {ie.Message}");
+                Console.WriteLine($"Restore InvalidOperationException {ie.Message}");
                 return false;
             }
             catch
             {
-                Console.WriteLine($"CmdExecutor UnHandledException");
+                Console.WriteLine($"Restore UnHandledException");
                 return false;
             }
         }
@@ -134,6 +139,11 @@ namespace Application.Services.Updaters
         private void restoreProcess_Exited(object sender, System.EventArgs e)
         {
             Console.WriteLine("restoreProcess_Exited");
+        }
+
+        private static Task<bool> WaitForExitAsync(Process process, int timeout)
+        {
+            return Task.Run(() => process.WaitForExit(timeout));
         }
 
         #endregion
