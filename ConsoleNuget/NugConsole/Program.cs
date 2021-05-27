@@ -1,55 +1,44 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Application;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace NugetCheck
+namespace NugConsole
 {
     class Program
     {
-        private static IConfigurationRoot Configuration { get; set; }
-        private static string env { get; set; }
-
+        private static IConfigurationRoot? Configuration { get; set; }
         static void Main(string[] args)
         {
-            Console.WriteLine("Nuget Version Checker and Updater\r");
-            Console.WriteLine("------------------------\n");
-
+            Console.WriteLine("Console Nuget!\r");
+            // Console.WriteLine("\n");
             Configuration = LoadAppSettings();
 
             var serviceCollection = new ServiceCollection();
             RegisterAndInjectServices(serviceCollection, Configuration);
+
             //Initialise netcore dependency injection provider
             var serviceProvider = serviceCollection.BuildServiceProvider();
-
-            //windows path
-            //string folderPath = @"C:\Users\seanr\Source\Repos\PersonalApps\NugetChecker";
-            //string folderPath = @"C:\Users\craft\Documents\Programming\GIT\NugetChecker";
-            //mac path
-            string folderPath = @"/Users/seanrafferty/Documents/Projects/NugetChecker";
-
+            //Initialise folderpath param and check for argument var!
+            string folderPath = Directory.GetCurrentDirectory();
             try
             {
                 string inputFilePath = args[0];
                 if (string.IsNullOrEmpty(inputFilePath) == false)
                     folderPath = inputFilePath;
             }
-            catch
-            {
-                //TODO: should error out here as we need a file/folderpath
-            }
-            Console.WriteLine($"Folder to search: {folderPath} - Searching");
-            string[] files = Directory.GetFiles(folderPath, "*.csproj", SearchOption.AllDirectories);
+            catch { }
 
-            bool attemptUpdate = true;//Confirm("Do you want to attempt to update?");
+            ConsoleMethods.EnableCloseOnCtrlC();
 
             try
             {
                 //Asynchronous method executed with Wait added to ensure that console request is not output too early
-                serviceProvider.GetService<FileChecker>().Execute(files, attemptUpdate).Wait();
+                serviceProvider.GetService<FolderSearcher>().Run(folderPath).Wait();
             }
             catch (NotImplementedException nie)
             {
@@ -59,8 +48,8 @@ namespace NugetCheck
             {
                 Console.WriteLine($"Generic Exception caught: {e.Message}");
             }
-            Console.WriteLine("App Completed");
-            return;
+            //Console.ReadLine();
+            Console.WriteLine("Closing App");
         }
 
         /// <summary>
@@ -88,8 +77,8 @@ namespace NugetCheck
         /// <summary>
         /// Prep/Configure Dependency Injection
         /// </summary>
-        /// <param name="services">DI service layer</param>
-        /// <param name="config">App Settings configuration</param>
+        /// <param name="services"></param>
+        /// <param name="config"></param>
         private static void RegisterAndInjectServices(IServiceCollection services, IConfiguration config)
         {
             services.AddLogging(logging =>
@@ -97,35 +86,8 @@ namespace NugetCheck
                 logging.AddConsole();
             }).Configure<LoggerFilterOptions>(options => options.MinLevel =
                                                 LogLevel.Warning);
+            services.AddApplication();
 
-            services.AddSingleton<FileChecker>();
-            services.AddTransient<NugetService>();
-            services.AddTransient<CmdExecutor>();
-            services.AddTransient<BashExecutor>();
-            services.AddTransient<PackageComparer>();
-
-            services.AddHttpClient<NugetService>();
-        }
-
-        /// <summary>
-        /// Test method to handle Yes/No selection on console apps
-        /// </summary>
-        /// <param name="title">The text to display on the read message</param>
-        /// <returns></returns>
-        public static bool Confirm(string title)
-        {
-            ConsoleKey response;
-            do
-            {
-                Console.Write($"{ title } [y/n] ");
-                response = Console.ReadKey(false).Key;
-                if (response != ConsoleKey.Enter)
-                {
-                    Console.WriteLine();
-                }
-            } while (response != ConsoleKey.Y && response != ConsoleKey.N);
-
-            return (response == ConsoleKey.Y);
         }
     }
 }

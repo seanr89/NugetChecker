@@ -1,20 +1,18 @@
 using System.Collections.Generic;
 
-namespace NugetCheck
+namespace Domain
 {
-    /// <summary>
-    /// Base NugetResponse object to support querying nuget API data in general
-    /// </summary>
-    public struct NugetResponse
+#nullable enable
+    public class NugetResponse
     {
-        public int totalHits { get; set; }
+        //public int totalHits { get; set; }
 
         public List<NugetPackageData> data { get; set; }
     }
 
     /// <summary>
-    /// Detailed nuget response data that we are current/on will in future - use
-    /// /// </summary>
+    /// Detailed nuget response data that was queried
+    /// </summary>
     public struct NugetPackageData
     {
         public string Id { get; set; }
@@ -26,6 +24,9 @@ namespace NugetCheck
         public List<PackageVersionInfo> Versions { get; set; }
     }
 
+    /// <summary>
+    /// Information for available versions from Nuget for a particular package
+    /// </summary>
     public struct PackageVersionInfo
     {
         public string Version { get; set; }
