@@ -13,6 +13,7 @@ New app architecture design to support console based nuget checks and updates!
 
 - Improved Logging Support
   - Console verbosity?
+  - Extended log messages and improved error handling
 - Reporting/Stats Output
 - Controlled Events
   - User functionality to confirm and control events during the app
