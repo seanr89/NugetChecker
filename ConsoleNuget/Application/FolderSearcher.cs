@@ -21,7 +21,6 @@ namespace Application
 
         private readonly IFileHandler _filehandler;
         private readonly INugetService _nugetService;
-        private readonly List<ProjectDetails> _projects;
         private readonly UpdaterFactory _updaterFactory;
 
         public FolderSearcher(ILogger<FolderSearcher> logger, IFileHandler fileHandler
@@ -33,7 +32,6 @@ namespace Application
             _updaterFactory = updaterFactory ?? throw new ArgumentNullException(nameof(updaterFactory));
             _inputProvider = Console.ReadLine;
             _outputProvider = Console.WriteLine;
-            _projects = new List<ProjectDetails>();
         }
 
         /// <summary>
@@ -49,37 +47,23 @@ namespace Application
             if (!files.Any())
                 return;
 
-            var stepSearch = false; //ConsoleMethods.Confirm("Do you wish to search each project invidually?");
-            await this.ProcessCSProjFiles(files, stepSearch);
-            await BeginPackageChecks(_projects);
+            var projects = new List<ProjectDetails>();
+            projects = await this.ProcessCSProjFiles(files, projects);
+            await BeginPackageChecks(projects);
         }
 
         /// <summary>
         /// Support the processing each found CSProj File for Data and Packages
         /// </summary>
         /// <param name="files">array of filenames and paths!</param>
-        private async Task ProcessCSProjFiles(string[] files, bool stepSearch)
+        private async Task<List<ProjectDetails>> ProcessCSProjFiles(string[] files, List<ProjectDetails> projects)
         {
             foreach (string filePath in files)
             {
                 var result = await _filehandler.ReadFileAndProcessContents(filePath);
-                _projects.Add(result);
-                CheckStagedSearchAndWaitIfNeeded(stepSearch);
+                projects.Add(result);
             }
-        }
-
-        /// <summary>
-        /// Checks to see if the user has requested a delay and if so requests the user continue through a console event!
-        /// </summary>
-        /// <param name="stepSearch">if the user has agreed or rejected to manually step through each</param>
-        private void CheckStagedSearchAndWaitIfNeeded(bool stepSearch)
-        {
-            if (!stepSearch)
-                return;
-
-            _outputProvider($"Scan next file press any key");
-            var response = _inputProvider() ?? string.Empty;
-            return;
+            return projects;
         }
 
         private async Task BeginPackageChecks(List<ProjectDetails> projects)

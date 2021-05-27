@@ -23,7 +23,7 @@ namespace NugConsole
 
             //Initialise netcore dependency injection provider
             var serviceProvider = serviceCollection.BuildServiceProvider();
-            //Initialise folderpath param and check for argument var!
+            //Initialise folderpath param and check for argument path provided!
             string folderPath = Directory.GetCurrentDirectory();
             try
             {
@@ -42,14 +42,13 @@ namespace NugConsole
             }
             catch (NotImplementedException nie)
             {
-                Console.WriteLine($"Implementation Exception caught: {nie.Message}");
+                Console.WriteLine($"Program: Implementation Exception caught: {nie.Message}");
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Generic Exception caught: {e.Message}");
+                Console.WriteLine($"Program: Generic Exception caught: {e.Message}");
             }
-            //Console.ReadLine();
-            Console.WriteLine("Closing App");
+            Console.WriteLine("App Complete - Closing!");
         }
 
         /// <summary>
